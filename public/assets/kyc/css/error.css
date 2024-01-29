@@ -1,0 +1,33 @@
+body{
+    padding-top: 0;
+}
+.error-wrapper{
+    background: url(../images/login-bg.png);
+    width: 100%;
+    height: 100vh;
+    background-size: contain;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: top;
+    justify-content: center;
+}
+
+.error-image img{
+    max-width: 300px;
+    opacity: .5;
+}
+
+.description p{
+    color: grey;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.description p a{
+    color: #dfa465;
+}
+
+.description p a:hover{
+    color: #ca8842;
+}

@@ -1,0 +1,109 @@
+<?php
+
+
+
+use Illuminate\Support\Facades\Route;
+
+
+
+/*
+
+|--------------------------------------------------------------------------
+
+| Web Routes
+
+|--------------------------------------------------------------------------
+
+|
+
+| Here is where you can register web routes for your application. These
+
+| routes are loaded by the RouteServiceProvider within a group which
+
+| contains the "web" middleware group. Now create something great!
+
+|
+
+*/
+
+
+
+/* Admin */
+
+use  App\Http\Controllers\Admin\Auth\LoginController;
+
+
+
+
+
+
+
+Route::group(["name" => "front","namespace" => "App/Http/Controllers"],function(){
+
+    Route::get('/', function () {
+
+        return redirect()->route("admin.login");
+
+    }); 
+
+});
+
+
+
+Route::view("kyc/verification","kyc.index");
+
+Route::get("admin/login", [LoginController::class, 'showLoginForm'])->name("admin.login");
+
+Route::post("admin/login", [LoginController::class, 'login'])->name("admin.login_submit");
+
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+//,'middleware' => 'auth'
+
+Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"prefix" => "admin" ,'middleware' => 'auth'],function(){
+
+        Route::get("dashboard","HomeController@dashboard")->name("dashboard");
+
+        Route::get("kyc-request","HomeController@kyc_request")->name("kyc_request"); // Need to remove this
+
+        Route::get("brands/customer-list","BrandController@customerList")->name("brands.customerlist");
+
+        Route::get('customers/getUploadOptions/{id}/{customerID}', "CustomerController@getUploadOptions")->name('customers.getUploadOptions');
+
+        Route::post('email-template-update-status', 'EmailTemplateController@updateStatus')->name('email-templates.updateStatus');
+       
+        Route::resources([
+
+            "brands" => "BrandController",
+
+            "customers" => "CustomerController",
+
+            "upload-options" => "UploadOptionController",
+            
+            "email-templates" => "EmailTemplateController"
+
+        ]);
+
+
+
+});
+
+
+
+Route::group(["namespace" => "App\Http\Controllers\Kyc",'as' => 'kyc.',"prefix" => "kyc"],function(){
+
+    Route::get("verification/{token}","KycVerificationController@index")->name("kyc-verification");
+    Route::post("verification/store-step1","KycVerificationController@storeStep1")->name("storeStep1");
+    Route::post("verification/store-step2","KycVerificationController@storeStep2")->name("storeStep2");
+    Route::post("verification/store-step3","KycVerificationController@storeStep3")->name("storeStep3");
+    Route::post("verification/store-step4","KycVerificationController@storeStep4")->name("storeStep4");
+    Route::get('verification/get-upload-options/{id}', "KycVerificationController@getUploadOptions")->name('get-upload-options');
+    Route::get('verification/get-brand-data/{brand_name}', "KycVerificationController@getBrandData")->name('get-brand-data');
+
+
+});
+
+
+
+
+
