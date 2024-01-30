@@ -10,7 +10,7 @@ use GuzzleHttp\Exception\ClientException;
 trait HttpRequestTrait
 {    
 
-    public $apiUrl = "https://apitest.hipl-staging3.com/api/v1/";
+    public $apiUrl =  "https://demoidfoxapi.hipl-staging3.com/api/v1/";
     public $headers;
 
     public function __construct()
