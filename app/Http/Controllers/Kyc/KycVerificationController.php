@@ -37,7 +37,18 @@ class KycVerificationController extends Controller
             $result = $this->getRequest($url);
             $countries = $result['data'];
             $data = json_decode(base64_decode($token),true);
-            return view('kyc.index',compact('data','countries'));
+
+            $customerId     = $data['secret_key'];
+            $customerUrl    = 'kyc/get-customer-detail/'.$customerId;
+            $customerData   = $this->getRequest($customerUrl);
+            $customerData   = $customerData['data'];
+            //dd($customerData);
+
+            $brand_name = 'Orcapay';
+            $brandUrl = 'kyc/get-brand-data/'.$brand_name;
+            $brand_Data = $this->getRequest($brandUrl);
+            $brand_details = $brand_Data['data']['brand_detail'];
+            return view('kyc.index',compact('data','countries','brand_details','customerData'));
         }
 
         return view('kyc.error');     
@@ -141,6 +152,10 @@ class KycVerificationController extends Controller
 
         $url = 'kyc/saveCustomer';
         $multipart =  [
+             [
+                'name' => 'id',
+                'contents' => $sessionData['id'],
+            ],
             [
                 'name' => 'first_name',
                 'contents' => $sessionData['first_name'],
@@ -203,7 +218,7 @@ class KycVerificationController extends Controller
             ],
             [
                 'name' => 'brand_id',
-                'contents' => 1,//$sessionData['brand_id'],
+                'contents' => $sessionData['brand_id'],
             ],
             [
                 'name' => 'PhotoIdRadio',
@@ -245,8 +260,10 @@ class KycVerificationController extends Controller
 
         }
 
+        //dd($multipart);
         
         $postReponse = $this->postRequest($url,$sessionData,'','multipart',$multipart);
+        //dd($postReponse);
     }
 
    public function getUploadOptions($id){
@@ -276,6 +293,12 @@ class KycVerificationController extends Controller
 
     public function getBrandData($brand_name){
         $url = 'kyc/get-brand-data/'.$brand_name;
+        $responseData = $this->getRequest($url);
+        return response()->json($responseData,200);
+    }
+
+    public function getCustomerDetail($customerId){
+        $url = 'kyc/get-customer-detail/'.$customerId;
         $responseData = $this->getRequest($url);
         return response()->json($responseData,200);
     }

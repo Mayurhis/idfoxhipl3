@@ -5,6 +5,11 @@
 	height:auto;
 }
 
+    :root{
+    --primary:{{$brand_details['accent_color']}};
+   
+	}
+
 </style>
 <div class="pageloader d-none">
     <div class="loader">

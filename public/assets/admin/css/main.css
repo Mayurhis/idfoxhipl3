@@ -2142,6 +2142,10 @@ div#ui-datepicker-div {
         white-space: normal;
     }
 
+    div#upload-options-table_wrapper td.sorting_1 {
+        min-width: auto;
+    }
+
     .pro-data{
         flex-wrap: inherit;
     }

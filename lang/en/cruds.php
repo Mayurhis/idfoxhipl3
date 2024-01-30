@@ -141,5 +141,31 @@ return [
         'id_verification_complete'              => 'ID Verification Complete',
         'id_verificaton_complete_heading_1'     => 'We have everything we need',
         'id_verificaton_complete_heading_2'     => 'You will be notified once your Identity is Verified',
+        'name_of_merchant'                      => 'Name of Merchant',
+        'one_time_id_verification'              => 'One-time ID Verification',
+        
+        
+
+    ],
+    'cancel-verification'=>[
+        'cancel_verification'       => 'Cancel ID Verification',
+        'warning'                   => 'WARNING!',
+        'heading_1'                 => 'If you cancel this verification, you will need to start over again',
+        'heading_2'                 => 'Legal regulations require us to verify your identity. This is to prevent fraudulent transactions or money laundering',
+        'heading_3'                 => 'Identity verification allows merchants to transact with you, knowing it is actually you making the transaction',
+        'heading_4'                 => 'Identity verification takes less than 2 minutes. You only ever have to verify ONCE!',
+        'heading_5'                 => 'It\'s easy, verify NOW...',
+        'verify_your_id'            => 'Verify your ID',
+    ],
+    'terms-n-conditions' =>[
+        'heading_1'                 => '2 minutes to verify information!',
+        'heading_2'                 => 'Instant one-time ID verification is a legally required regulatory step of the merchant gateway.',
+        'heading_3'                 => 'This identity verification is directed by idFOX on behalf of the merchant gateway, ensuring a seamless exchange. idFOX carefully safeguards your personal information and privacy.',
+        'heading_4'                 => 'A safe, secure, fast and efficient verification!',
+        'heading_5'                 => 'Should you want more details or legal speak, please review our',
+        'easy_fast'                 => 'Easy, Fast, Once!',    
+        'legal_centre'              => 'legal_centre'
+
+
     ],
 ];

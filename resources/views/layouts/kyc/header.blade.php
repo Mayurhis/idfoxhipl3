@@ -12,8 +12,8 @@
 							</a>
 						</div>
 						<div class="head-titlearea text-center">
-							<h2>Name of Merchant</h2>
-							<span>One-time ID Verification</span>
+							<h2>{{__('cruds.customer-front-form.name_of_merchant')}} </h2>
+							<span>{{__('cruds.customer-front-form.one_time_id_verification')}}</span>
 						</div>
 						<div class="select-area">
 							<select class="niceCountryInputSelector from_code form-control" id="from_code" name="from_country">

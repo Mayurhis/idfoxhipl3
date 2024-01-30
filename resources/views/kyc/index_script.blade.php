@@ -1,30 +1,48 @@
 <script type="text/javascript">
-    $(document).ready(function(){
-    	function updateRootVariables(theme,primaryColor) {
+	updateRootVariables("{{$brand_details['accent_color']}}");
+	function updateRootVariables(primaryColor) {
             $(':root').css('--primary', primaryColor);
-             $('html').attr('data-bs-theme',theme);
+            //$('html').attr('data-bs-theme',theme);
         }
+
+  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase());
+
+	if (isMobile)
+	{
+		$(".take_photo_id_pic").show();
+		$(".take_address_pic").show();
+	}else{
+		$(".take_photo_id_pic").hide();
+		$(".take_address_pic").hide();
+	}
+    $(document).ready(function(){
+    	// var width = $(window).width();
+    	// console.log(width);
+	    // if (width < 768) {
+	    //     $(".take_photo_id_pic").show();
+	    // }else{
+	    // 	$(".take_photo_id_pic").hide();
+	    // }
+	    
+
+    	
      	var brand_name = 'Orcapay';
        	$.ajax({
             type: "GET",
             url: 'get-brand-data/'+brand_name,
             contentType: false,
-            beforeSend:function(){
-            	$('.pageloader').removeClass('d-none');
-                $('.pageloader').addClass('d-block');
-            },
             success: function(ajaxResponse) {
             	var theme = ajaxResponse.data.brand_detail.theme;
             	var primaryColor = ajaxResponse.data.brand_detail.accent_color;
             	$('.head-titlearea h2').text(brand_name);
-            	updateRootVariables(theme,primaryColor);
-
-            	$('.pageloader').removeClass('d-block');
-                $('.pageloader').addClass('d-none');
-                
+            	
+    
             },
             error: function() {}
         })
+
+        
+
 		$(document).on("submit","#kycVerifiactionStep1",function(e){
             e.preventDefault();
             var form1Next = $('.submit-form-1');
@@ -201,6 +219,68 @@
 
 		});
 
+		
+		$(document).on('click', ".take_photo_id_pic",function(e){
+			e.preventDefault();
+        	addCaptureAttributeOnPhotoIdImage();
+		});
+
+		
+		$('#photoIdImage,.take_photo_id_pic').focusout(function(){
+			$('#photoIdImage').removeAttr('capture');
+		});
+
+		$('#photoIdImage').change(function () {
+			$('#photoIdImage').removeAttr('capture');		
+		});	
+
+		function addCaptureAttributeOnPhotoIdImage() {
+	        $('#photoIdImage').val('');
+	        $('.step2pimg img').attr("src", "{{asset('assets/kyc/images/default-img.png')}}");
+	        $('.image-name').text("abcd.jpg");
+	        $('#photoIdImage').attr("capture", "camera");
+	        $('#photoIdImage').trigger('click');
+	        $('#upload_submit').html('Upload <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 6.04C18.67 2.59 15.64 0 12 0C9.11 0 6.6 1.64 5.35 4.04C2.34 4.36 0 6.91 0 10C0 13.31 2.69 16 6 16H19C21.76 16 24 13.76 24 11C24 8.36 21.95 6.22 19.35 6.04ZM14 9V13H10V9H7L11.65 4.35C11.85 4.15 12.16 4.15 12.36 4.35L17 9H14Z" fill="black"/></svg>');
+	        $('#upload_submit').addClass('btn');
+	    }
+
+
+
+	    $(document).on('click', ".take_address_pic",function(e){
+			e.preventDefault();
+        	addCaptureAttributeOnAddressImage();
+		});
+
+		
+		$('#addressImage,.take_photo_id_pic').focusout(function(){
+			$('#addressImage').removeAttr('capture');
+		});
+
+		$('#addressImage').change(function () {
+			$('#addressImage').removeAttr('capture');		
+		});	
+
+		function addCaptureAttributeOnAddressImage() {
+	        $('#addressImage').val('');
+	        $('.step2pimg img').attr("src", "{{asset('assets/kyc/images/default-img.png')}}");
+	        $('.image-name').text("abcd.jpg");
+	        $('#addressImage').attr("capture", "camera");
+	        $('#addressImage').trigger('click');
+	        $('#upload_submit').html('Upload <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 6.04C18.67 2.59 15.64 0 12 0C9.11 0 6.6 1.64 5.35 4.04C2.34 4.36 0 6.91 0 10C0 13.31 2.69 16 6 16H19C21.76 16 24 13.76 24 11C24 8.36 21.95 6.22 19.35 6.04ZM14 9V13H10V9H7L11.65 4.35C11.85 4.15 12.16 4.15 12.36 4.35L17 9H14Z" fill="black"/></svg>');
+	        $('#upload_submit').addClass('btn');
+	    }
+
+	    
+
+
+		// $(document).on('click', '#photoIdImage', function(e){ 
+
+		// 	if($("#photoIdImage").hasAttribute("capture")){
+		// 		alert('dassdsds');
+		// 	}	
+
+  //       });
+
 
 		$("#form4Continue").click(function () {
 
@@ -344,8 +424,6 @@
 		}
 
 		function formStepsValidation(formId,fieldSelector,elementSelector,rules,nextModal){
-			console.log('formId :'+formId,'fieldSelector : '+ fieldSelector, 'elementSelector : '+ elementSelector, 'rules : '+ rules, 'nextModal : '+nextModal);
-			console.log(rules);
 			var form = $("#"+formId);
 			form.validate({
 				errorElement: 'span',
@@ -439,5 +517,8 @@
 
 
 		}
+
+
+		
     });
 </script>

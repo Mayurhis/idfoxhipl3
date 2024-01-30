@@ -60,7 +60,7 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 //,'middleware' => 'auth'
 
-Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"prefix" => "admin" ,'middleware' => 'auth'],function(){
+Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"prefix" => "admin" ,'middleware' => ['auth','is-access-token-expire']],function(){
 
         Route::get("dashboard","HomeController@dashboard")->name("dashboard");
 
@@ -99,6 +99,7 @@ Route::group(["namespace" => "App\Http\Controllers\Kyc",'as' => 'kyc.',"prefix" 
     Route::post("verification/store-step4","KycVerificationController@storeStep4")->name("storeStep4");
     Route::get('verification/get-upload-options/{id}', "KycVerificationController@getUploadOptions")->name('get-upload-options');
     Route::get('verification/get-brand-data/{brand_name}', "KycVerificationController@getBrandData")->name('get-brand-data');
+    Route::get('verification/get-customer-detail/{customer_id}', "KycVerificationController@getCustomerDetail")->name('get-customer-detail');
 
 
 });

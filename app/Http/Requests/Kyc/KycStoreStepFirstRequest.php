@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Kyc;
 
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,7 +23,7 @@ class KycStoreStepFirstRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $request)
     {
         $rules =  [
             'first_name'=> [
@@ -41,9 +42,9 @@ class KycStoreStepFirstRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                 Rule::unique('customers')->where(function ($query) {
-                         $query->whereNull('deleted_at');
-                 }),
+                 // Rule::unique('customers')->where(function ($query) {
+                 //         $query->whereNull('deleted_at');
+                 // }),
 
             ],
             'mobile_number'=> [

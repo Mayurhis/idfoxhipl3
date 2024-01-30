@@ -58,29 +58,31 @@
 									<form class="customer-detail-form" id="kycVerifiactionStep1" action="{{ route('kyc.storeStep1')}}">
 										@csrf
 										<div class="form-group detail-fields text-center">
+											<input type="hidden" name="brand_id" value="{{$customerData['brand_id']}}" >
+											<input type="hidden" name="id" value="{{$customerData['id']}}" >
 											<label>{{__('cruds.customer.fields.prefix')}}</label>
-											<input type="text" name="prefix" value="{{isset($data['prefix']) ? $data['prefix'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="prefix" value="{{isset($customerData['prefix']) ? $customerData['prefix'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.first_name')}} <span class="text-danger">*</span></label>
-											<input type="text" name="first_name" value="{{isset($data['first_name']) ? $data['first_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="first_name" value="{{isset($customerData['first_name']) ? $customerData['first_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.middle_name')}}</label>
-											<input type="text" name="middle_name" value="{{isset($data['middle_name']) ? $data['middle_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="middle_name" value="{{isset($customerData['middle_name']) ? $customerData['middle_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.last_name')}} <span class="text-danger">*</span></label>
-											<input type="text" name="last_name" value="{{isset($data['last_name']) ? $data['last_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="last_name" value="{{isset($customerData['last_name']) ? $customerData['last_name'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.suffix')}}</label>
-											<input type="text" name="suffix" value="{{isset($data['suffix']) ? $data['suffix'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="suffix" value="{{isset($customerData['suffix']) ? $customerData['suffix'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.dob')}}<span class="text-danger">*</span></label>
-											<input type="text" name="dob" id="datepicker" placeholder="yyyy-mm-dd" readonly>
+											<input type="text" name="dob" id="datepicker" placeholder="yyyy-mm-dd" readonly value="{{isset($customerData['dob']) ? $customerData['dob'] : ''}}">
 											{{-- <div class="dob-fields">
 												<div class="dbo-innerarea">
 													<div class="bob-day">
@@ -122,39 +124,39 @@
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.address_line_1')}}<span class="text-danger">*</span></label>
-											<input type="text" name="address_line_1" value="{{isset($data->address_line_1) ? $data->address_line_1 : ''}}" >
+											<input type="text" name="address_line_1" value="{{isset($customerData['address'][0]['address_line_1']) ? $customerData['address'][0]['address_line_1'] : ''}}" >
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.address_line_2')}}</label>
-											<input type="text" name="address_line_2" value="{{isset($data->address_line_2) ? $data->address_line_2 : ''}}" >
+											<input type="text" name="address_line_2" value="{{isset($customerData['address'][0]['address_line_2']) ? $customerData['address'][0]['address_line_2'] : ''}}" >
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.post_code')}}</label>
-											<input type="text" name="post_code" value="{{isset($data->post_code) ? $data->post_code : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="post_code" value="{{isset($customerData['address'][0]['post_code']) ? $customerData['address'][0]['post_code']: ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z0-9 ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.city')}} <span class="text-danger">*</span></label>
-											<input type="text" name="city" value="{{isset($data->city) ? $data->city : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="city" value="{{isset($customerData['address'][0]['city']) ? $customerData['address'][0]['city'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.region')}} <span class="text-danger">*</span></label>
-											<input type="text" name="region" value="{{isset($data->region) ? $data->region : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="region" value="{{isset($customerData['address'][0]['region']) ? $customerData['address'][0]['region'] : ''}}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.country_residence')}}</label>
 											<select class="niceCountryInputSelector from_code2 form-control" id="country_id" name="country_id">
 												@foreach ($countries as $counry)
-													<option value="{{$counry['id']}}" data-src="{{asset('assets/flags/'.$counry['flag'])}}" data-iso="{{$counry['iso']}}" data-country="{{$counry['name']}}">{{$counry['name']}} <strong>({{$counry['iso']}})</strong></option>
+													<option value="{{$customerData['address'][0]['country_id']}}" data-src="{{asset('assets/flags/'.$counry['flag'])}}" data-iso="{{$counry['iso']}}" data-country="{{$counry['name']}}" {{$customerData['address'][0]['country_id'] == $counry['id'] ? 'selected' : ''}}>{{$counry['name']}} <strong>({{$counry['iso']}})</strong></option>
 												@endforeach
 											</select>
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.email')}}</label>
-											<input type="email" name="email" value="{{isset($data['email']) ? $data['email'] : ''}}">
+											<input type="email" name="email" value="{{isset($customerData['email']) ? $customerData['email'] : ''}}">
 										</div>
 										<div class="form-group detail-fields text-center">
 											<label>{{__('cruds.customer.fields.mobile-sms')}}</label>
-											<input type="text" name="mobile_number" value="{{isset($data->mobile_number) ? $data->mobile_number : ''}}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');">
+											<input type="text" name="mobile_number" value="{{isset($customerData['mobile_number']) ? $customerData['mobile_number'] : ''}}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');">
 										</div>
 										<div class="detail-fields text-center">
 											<button type="submit" class="nbtn">{{__('cruds.customer-front-form.continue')}}</button>

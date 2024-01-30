@@ -26,29 +26,28 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
+    {    
         $UserLoginService = new UserLoginService;
         //$result =  $UserLoginService->login($request); 
         $result =  $UserLoginService->IAMlogin($request); 
-        dd($result);
+       
         $code = 200;
         if($result['code'] == 200){
             $user = User::firstOrCreate(['email' => $request->email], ['email' =>  $request->email , 'password' => Hash::make($request->password)]);
-            Auth::login($user);   
+            Auth::login($user); 
+            // $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $result['response']['data']['access_token'] )[1]))));
+           
+            // if($result['response']['data']['user']['aud'] == ''){
+                
+            // } else {
+               
+            // }
+
+            $this->saveLoggedInUserDetailInSession(array_merge($result['response'], ['password' => $request->password]));
             $response = ["status" => true, "message" => "Login successfull"];
             return response()->json($response,$code);
         }else{
-            
-            // if($result['code'] == 422){
-               
-            //     //$data = json_decode($result['message']);
-            
-            //     $response = ["status" => false, "message" => $result['message']];
-            // } else {
-            //     $response = ["status" => false, "message" => $result['message']];
-            // }
-            //$response = ["status" => false, "message" => $result['message']];
-            
+
             $code = $result['code'];
             return response()->json($result,$code);
         }
@@ -57,10 +56,19 @@ class LoginController extends Controller
     
     public function logout()
     {
-        //$this->guard()->logout();
+        // $loggedInUserDetails = session()->get('logged_in_user_detail');
+        //     dd($loggedInUserDetails);
+        // $UserLoginService = new UserLoginService;
+        // $result =  $UserLoginService->IAMlogout(); 
+        // dd($result);
         auth()->logout();
         request()->session()->invalidate();
         Session::flush();
         return redirect()->route('admin.login');
+    }
+
+    private function saveLoggedInUserDetailInSession($result){
+        session()->put('logged_in_user_detail',$result);
+        session()->save();
     }
 }

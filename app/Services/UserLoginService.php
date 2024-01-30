@@ -51,4 +51,17 @@ class UserLoginService
         return $response;
     }
 
+    public function IAMlogout()
+    {   
+        $url = "https://iam.scancheck.io:9999/api/logout"; 
+        $response =  $this->IAMGetRequest($url);
+        return $response;
+    }
+
+    public function IAMGetNewAccessToken($postData, $refreshToken){
+        $url = "https://iam.scancheck.io:9999/api/refresh/".$refreshToken; 
+        $response =  $this->IAMPostRequest($url,$postData);
+        return $response;
+    }
+
 }

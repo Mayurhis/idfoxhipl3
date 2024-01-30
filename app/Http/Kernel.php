@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'AuthenticateKycApiHeaders' => \App\Http\Middleware\AuthenticateKycApiHeaders::class,
-        'AuthenticateAdminApiHeaders' => \App\Http\Middleware\AuthenticateAdminApiHeaders::class
+        'AuthenticateAdminApiHeaders' => \App\Http\Middleware\AuthenticateAdminApiHeaders::class,
+        'is-access-token-expire' =>\App\Http\Middleware\IsAccessTokenExpire::class,
     ];
 }

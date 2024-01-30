@@ -12,6 +12,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" async>
         <!-- Main css -->
         <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/main.css')}}" async>
+        <link rel="stylesheet" href="{{asset('assets/admin/toastr/toastr.min.css')}}">
     </head>
     <body class="admin-dashboard">
     
@@ -46,6 +47,7 @@
 
         <!-- Jquery Library -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+         <script src="{{asset('assets/admin/toastr/toastr.min.js')}}"></script>
         <!-- Bootstrap Js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" async integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>      
@@ -53,6 +55,45 @@
 
 
         $(document).ready(function(){
+
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': false,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+
+            @if(Session::has('message'))
+                
+                var type = "{{ Session::get('alert-type', 'info') }}";
+            
+                switch (type) {
+                    case 'info':
+                        toastr.info("{{ Session::get('message') }}", 'Info!');
+                        break;
+
+                    case 'warning':
+                        toastr.warning("{{ Session::get('message') }}", 'Warning!');
+                        break;
+                    case 'success':
+                        toastr.success("{{ Session::get('message') }}", 'Success!');
+                        break;
+                    case 'error':
+                        toastr.error("{{ Session::get('message') }}", 'Error');
+                        break;
+                }
+            @endif
+
             $('#togglePassword').on('click', function(e) {
                 const password = $('#loginPassword');
                 const type = password.attr('type') === 'password' ? 'text' : 'password';
@@ -115,18 +156,33 @@
                             $('.overlay').show();
                         },
                         success: function(response) {
+                            //console.log('success',response);
                             $('body').find('.contactError').remove();
                             $("#loginForm")[0].reset();
                             window.location.replace("{{route('admin.dashboard')}}");
-                            //toastr.success(response.message, 'Success!');
-                            {{-- setTimeout(function() {
-                                window.location.reload();
-                            }, 500); --}}
-                    
+                          
                         },
                         error: function(response) {
-                            console.log(response);
-                            if(response.responseJSON.code == 422){
+                            //console.log('error',response);
+                            var result = response.responseJSON.message;
+                            if('code' in result){
+                                if(result.code == 1010){
+                                
+                                    toastr.error(result.data.message, 'Error');
+                                }
+                            } else {
+                                $.each(result, function(key, value) {
+                                    var nameAttr = value.field.split(".")[1].toLowerCase();
+                                    
+                                    var $field = $('[name="' + nameAttr + '"]');
+                                    $field.addClass('is-invalid');
+                                    $field.after('<span class="text-danger contactError"> This ' + nameAttr  + ' field is '+value.tag+'</span>');
+                                });
+
+                            }
+
+                            /// old Code 
+                            {{-- if(response.responseJSON.code == 422){
                                 $('body').find('.contactError').remove();
                                 const errorMessage = response.responseJSON.message;
                                 if (errorMessage && errorMessage.errors) {
@@ -142,31 +198,12 @@
                                 $field.after('<span class="text-danger contactError">' + response.responseJSON.message + '</span>');
                             }else {
                                 console.log(response.responseJSON.message);
-                            }
+                            } --}}
                            
-                            // if(response.status == 422){
-                            //     $('body').find('.contactError').remove();
-                            //     const errorMessage = response.responseJSON.message.validation_errors;
-                            //     if (errorMessage) {
-                            //         $.each(errorMessage, function(key, value) {
-                            //             var $field = $('[name="' + key + '"]');
-                            //             $field.addClass('is-invalid');
-                            //             $field.after('<span class="text-danger contactError">' + value[0] + '</span>');
-                            //         });
-                            //     }
-                            // } else {
-                                
-                            //     console.log(response.responseJSON.message);
-                            //     var $field = $('[name="email"]');
-                                        
-                            //     $field.after('<span class="text-danger contactError">' + response.responseJSON.message + '</span>');
-                            // }
-                            
-                            // $('.overlay').hide();
+                         
                         },
                         complete: function() {
-                        // $('.overlay').hide();
-                        $('body').find('#loginSubmit').prop('disabled', false);
+                            $('body').find('#loginSubmit').prop('disabled', false);
                         }
                     });
 
