@@ -10,7 +10,7 @@ use GuzzleHttp\Exception\ClientException;
 trait HttpRequestTrait
 {    
 
-    public $apiUrl =  "https://demoidfoxapi.hipl-staging3.com/api/v1/";
+    public $apiUrl =  "https://apitest.hipl-staging3.com/api/v1/";
     public $headers;
 
     public function __construct()
@@ -30,6 +30,7 @@ trait HttpRequestTrait
        try {
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
+            //dd($url);
             if ($params != "") {
                 $url = $url . "?" . $params;
             }
@@ -38,14 +39,15 @@ trait HttpRequestTrait
                 'headers' => $this->headers,
             ]); 
             $body = $response->getBody()->getContents();
+            //dd($body);
             return json_decode($body, true);
         }catch (ConnectException $e) {
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage(), 'data' => []];
         } catch(ClientException $e){
-            // dd($e->getMessage(),'fsdf');
+            dd($e->getMessage(),'fsdf');
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => json_decode( $e->getResponse()->getBody()), 'data' => []];
         } catch(\Exception $e){
-            //dd($e->getMessage());
+            dd($e->getMessage());
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage()];
         }
     //    dd($response);
@@ -67,13 +69,12 @@ trait HttpRequestTrait
             }
 
             $url = $this->apiUrl.$url;
-            //dd($url);
+            //dd($formData);
             $client = new Client(); 
             $response = $client->request('POST', $url, [
                 $formType => $formData,
                 'headers' => $headers
             ]);
-            
             $body = $response->getBody()->getContents();
             //dd($body);
             return json_decode($body, true);
@@ -152,31 +153,11 @@ trait HttpRequestTrait
 
     public function IAMGetRequest($url)
     {  
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-        // CURLOPT_URL => 'https://iam.scancheck.io:9999/api/logout',
-        // CURLOPT_RETURNTRANSFER => true,
-        // CURLOPT_ENCODING => '',
-        // CURLOPT_MAXREDIRS => 10,
-        // CURLOPT_TIMEOUT => 0,
-        // CURLOPT_FOLLOWLOCATION => true,
-        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        // CURLOPT_CUSTOMREQUEST => 'GET',
-        // CURLOPT_HTTPHEADER => array(
-        //     'Content-Type: application/json',
-        //     'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIiLCJlbWFpbCI6ImFkbWluLmhpc0BleGFtcGxlLmNvbSIsImV4cCI6MTcwNjU5Njg1OCwiaWF0IjoxNzA2NTk1NjU4LCJpc3MiOiJpYW0uc2NhbmNoZWNrLmlvIiwibWV0YWRhdGEiOm51bGwsIm5iZiI6MTcwNjU5NTY1OCwicm9sZSI6IiIsInN1YiI6ImlUS0VlY1pKeXhDWmhlVHJUVnIyN2UifQ.GZhwkaZQ2YLhob2f54JObqHDzzSNRNjQs0r8LVpjYf0'
-        // ),
-        // ));
-
-        // $response = curl_exec($curl);
-
-        // curl_close($curl);
-        // echo $response;
-        // die; 
+       
        try {
+        
             $loggedInUserDetails = session()->get('logged_in_user_detail');
-        //     dd($loggedInUserDetails);
+   
             $headers = [
                 'Authorization' => 'Bearer '.$loggedInUserDetails['data']['access_token'],
                 'Content-Type' => 'application/json',
@@ -189,13 +170,10 @@ trait HttpRequestTrait
             ]); 
             $body = $response->getBody()->getContents();
             $result = ['status' => true, 'code' => 200, 'message' => 'Logout successfully' , 'response' => json_decode($body, true)];
-            dd($result);
             return $result;
-            //return json_decode($body, true);
         }catch (ConnectException $e) {
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage(), 'data' => []];
         } catch(ClientException $e){
-            dd($e);
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => json_decode( $e->getResponse()->getBody()), 'data' => []];
         } catch(\Exception $e){
             

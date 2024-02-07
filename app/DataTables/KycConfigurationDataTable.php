@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class UploadOptionDataTable extends DataTable
+class KycCOnfigurationDataTable extends DataTable
 {
 
     use HttpRequestTrait;
@@ -35,36 +35,30 @@ class UploadOptionDataTable extends DataTable
             ->editColumn('title', function($record) {
                 return $record['title'] ?? __('global.N/A');
             }) 
-            ->editColumn('image', function($record) {
-                $image = __('global.N/A');
-                if($record['image']){
-                    $image = '<div class="step2pimg" id="CustomersPic" name="CustomersPic">
-                                <img src="'.$record['image'].'" alt="image">
-                            </div>';
-                }
-                return $image;
-            }) 
+            
             ->editColumn('country_id', function($record) { 
                 return $record['country']['name'] ?? __('global.N/A');
             }) 
-            ->editColumn('is_default_document', function($record) { 
-                return $record['is_default_document'] == 1 ? __('global.yes') : __('global.no');
-            }) 
-            ->editColumn('upload_type', function($record) { 
-                return ($record['upload_type'] && config('admin')['upload_option_type'][$record['upload_type']]) ? config('admin')['upload_option_type'][$record['upload_type']] : __('global.N/A');
+            ->editColumn('status', function($record) { 
+                $statusData = config('admin')['kyc_configuration_status'];
+                foreach($statusData as $key => $value){
+                    if($record['status'] == $key){
+                        return $value;
+                    }
+                }
+                
             })  
+             ->editColumn('configuration', function($record) { 
+                return $record['configuration'] ?? __('global.N/A');
+            }) 
             ->addColumn('action', function($record) {
                 $action  = '<div class="action-grid d-flex gap-2">';
                 
-                // $action .= '<a class="action-btn bg-dark" title="'.__('global.view').'" href="'.route('admin.upload-options.show', $record['id']).'">
-                //                 <i class="fi fi-rr-eye"></i>
-                //             </a>';
-            
-                $action .= '<a class="action-btn bg-dark" title="'.__('global.edit').'" href="'.route("admin.upload-options.edit", $record['id']).'">
+                $action .= '<a class="action-btn bg-dark" title="'.__('global.edit').'" href="'.route("admin.kyc-configurations.edit", $record['id']).'">
                     <i class="fi fi-rr-edit"></i>
                 </a>';
             
-                $action .= '<form action="'.route('admin.upload-options.destroy', $record['id']).'" method="POST" class="deleteUploadOptionForm">
+                $action .= '<form action="'.route('admin.kyc-configurations.destroy', $record['id']).'" method="POST" class="deleteKycConfigurationForm">
                             <input type="hidden" name="_method" value="DELETE"> 
                             <input type="hidden" name="_token" value="'.csrf_token().'">
                             <button class="action-btn bg-dark" title="'.__('global.delete').'"><i class="fi fi-rr-trash"></i></button></form>';
@@ -76,25 +70,25 @@ class UploadOptionDataTable extends DataTable
 
     public function query()
     {
-        $apiData = $this->getRequest('upload-options')["data"];  
+        $apiData = $this->getRequest('kyc-configurations')["data"];  
         return $apiData;
     }
 
     public function html(): HtmlBuilder
     {
         return $this->builder()
-        ->setTableId('upload-options-table')
+        ->setTableId('kyc-configurations-table')
         ->columns($this->getColumns())
         ->minifiedAjax()
-        ->dom('lBfrtip')
+        ->dom('Blfrtip')
         ->buttons(
             Button::make('export'),
-            // Button::make('reset'),
-            // Button::make('reload')
+            Button::make('reset'),
+            Button::make('reload')
         )
         ->parameters([
             'stateSave' => false,
-            //'buttons' => ['pageLength'],
+            'buttons' => ['pageLength'],
             'responsive' => true,
             'autoWidth' => true,
             'width' => '100%',
@@ -106,11 +100,9 @@ class UploadOptionDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')->title('#')->orderable(false)->searchable(false),
-            Column::make('image')->title(__('global.image'))->exportable(false)->searchable(false),
-            Column::make('title')->title(__('cruds.upload-options.fields.title')),
             Column::make('country_id')->title(__('global.country')),
-            Column::make('upload_type')->title(__('cruds.upload-options.fields.upload_type')),
-            Column::make('is_default_document')->title(__('cruds.upload-options.fields.default_document')),
+            Column::make('status')->title(__('cruds.kyc-configurations.fields.status')),
+            Column::make('configuration')->title(__('cruds.kyc-configurations.fields.configuration')),
             Column::make('created_at')->title(__('global.created_at'))->searchable(false),
             Column::computed('action')
             ->exportable(false)
@@ -127,6 +119,6 @@ class UploadOptionDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'UploadOption_' . date('YmdHis');
+        return 'KycConfiguration_' . date('YmdHis');
     }
 }

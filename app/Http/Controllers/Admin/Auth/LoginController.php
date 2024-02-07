@@ -28,23 +28,36 @@ class LoginController extends Controller
     public function login(Request $request)
     {    
         $UserLoginService = new UserLoginService;
-        //$result =  $UserLoginService->login($request); 
         $result =  $UserLoginService->IAMlogin($request); 
        
         $code = 200;
         if($result['code'] == 200){
             $user = User::firstOrCreate(['email' => $request->email], ['email' =>  $request->email , 'password' => Hash::make($request->password)]);
             Auth::login($user); 
-            // $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $result['response']['data']['access_token'] )[1]))));
-           
-            // if($result['response']['data']['user']['aud'] == ''){
-                
-            // } else {
-               
-            // }
-
             $this->saveLoggedInUserDetailInSession(array_merge($result['response'], ['password' => $request->password]));
-            $response = ["status" => true, "message" => "Login successfull"];
+            $url = null;
+            if($result['response']){
+            $userType = $result['response']['data']['user']['type'];
+                switch ($userType) {
+                    case 'admin':
+                            $url = route('admin.dashboard');
+                            
+                        break;
+                    case 'auditor':
+                           $url = route('admin.brands.index');
+                        break;
+                    case 'user':
+                           $url = route('admin.customers.profile');
+                        break;
+
+                    default:
+                        $url = route('admin.dashboard');
+                        break;
+                }  
+                
+
+            }
+            $response = ["status" => true, "message" => "Login successfull",'url'=>$url];
             return response()->json($response,$code);
         }else{
 
@@ -56,15 +69,19 @@ class LoginController extends Controller
     
     public function logout()
     {
-        // $loggedInUserDetails = session()->get('logged_in_user_detail');
-        //     dd($loggedInUserDetails);
-        // $UserLoginService = new UserLoginService;
-        // $result =  $UserLoginService->IAMlogout(); 
-        // dd($result);
-        auth()->logout();
-        request()->session()->invalidate();
-        Session::flush();
-        return redirect()->route('admin.login');
+        $loggedInUserDetails = session()->get('logged_in_user_detail');
+        $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
+        $UserLoginService = new UserLoginService;
+        $result =  $UserLoginService->IAMlogout(); 
+        if($result['response']['status'] == 'success'){
+            auth()->logout();
+            request()->session()->invalidate();
+            Session::flush();
+            $user = User::where('email',$accessTokenData->email)->delete();
+            return redirect()->route('admin.login');
+        }
+        
+        
     }
 
     private function saveLoggedInUserDetailInSession($result){

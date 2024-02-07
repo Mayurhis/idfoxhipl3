@@ -2082,6 +2082,49 @@ div#ui-datepicker-div {
     border-radius: 20px;
 }
 
+.select-box-wrap .contactError {
+    position: absolute;
+    bottom: -16px;
+    font-size: 12px;
+}
+
+
+/*--- 06-02-2024----*/
+
+.form-check.detail-fields.select-box-wrap div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-check.detail-fields.select-box-wrap div label {
+    margin: 0;
+    line-height: 1.8;
+}
+
+.form-check.detail-fields.select-box-wrap div input {
+    margin: 0;
+}
+.check-list.default-check.step_form_checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: self-start;
+}
+.step_form_checkbox .form-check.detail-fields.select-box-wrap {
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.step-form-checkbox-title {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
 
 /* Responsive  */
 

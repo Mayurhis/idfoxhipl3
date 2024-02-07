@@ -22,8 +22,8 @@
 				<label for="brandFilter">{{__('global.select')}} {{__('cruds.brand.title')}}</label>
 				<select name="brandFilter" id="brandFilter">
 					<option value="">--{{__('global.select')}} {{__('cruds.brand.title')}}--</option>
-					@if(!empty($bandList))
-						@foreach($bandList as $key=>$value) 
+					@if(!empty($brandList))
+						@foreach($brandList as $key=>$value) 
 							<option value="{{$value['id']}}">{{$value['title']}}</option>
 						@endforeach
 					@endif

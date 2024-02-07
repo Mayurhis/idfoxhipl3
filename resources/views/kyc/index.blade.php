@@ -51,11 +51,12 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-12">
-						<div class="tab-bottom-blog edit-open form-step-1">
+						<div class="tab-bottom-blog edit-open form-steps">
 							@include("kyc.form_steps.step1")
 							@include("kyc.form_steps.step2")
 							@include("kyc.form_steps.step3")
 							@include("kyc.form_steps.step4")
+							
 						</div>
 					</div>
 				</div>

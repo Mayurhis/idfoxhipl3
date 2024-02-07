@@ -159,7 +159,8 @@
                             //console.log('success',response);
                             $('body').find('.contactError').remove();
                             $("#loginForm")[0].reset();
-                            window.location.replace("{{route('admin.dashboard')}}");
+                            window.location.replace(response.url);
+
                           
                         },
                         error: function(response) {

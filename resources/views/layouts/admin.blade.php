@@ -20,7 +20,7 @@
         <!-- coloris  -->
         <link rel="stylesheet" href="{{asset('assets/admin/css/coloris.min.css')}}">
         <link rel="stylesheet" href="{{asset('assets/admin/toastr/toastr.min.css')}}">
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
         <!-- Main css -->
         <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/main.css')}}" async>
          @yield('styles')

@@ -146,7 +146,7 @@
 											<label>{{__('cruds.customer.fields.country_residence')}}</label>
 											<select class="niceCountryInputSelector from_code2 form-control" id="country_id" name="country_id">
 												@foreach ($countries as $counry)
-													<option value="{{$customerData['address'][0]['country_id']}}" data-src="{{asset('assets/flags/'.$counry['flag'])}}" data-iso="{{$counry['iso']}}" data-country="{{$counry['name']}}" {{$customerData['address'][0]['country_id'] == $counry['id'] ? 'selected' : ''}}>{{$counry['name']}} <strong>({{$counry['iso']}})</strong></option>
+													<option value="{{$counry['id']}}" data-src="{{asset('assets/flags/'.$counry['flag'])}}" data-iso="{{$counry['iso']}}" data-country="{{$counry['name']}}" {{$customerData['address'][0]['country_id'] == $counry['id'] ? 'selected' : ''}}>{{$counry['name']}} <strong>({{$counry['iso']}})</strong></option>
 												@endforeach
 											</select>
 										</div>

@@ -197,6 +197,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
 
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Yajra\DataTables\ButtonsServiceProvider::class,
     ],
 
     /*

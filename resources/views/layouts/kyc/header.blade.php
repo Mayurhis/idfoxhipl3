@@ -12,9 +12,10 @@
 							</a>
 						</div>
 						<div class="head-titlearea text-center">
-							<h2>{{__('cruds.customer-front-form.name_of_merchant')}} </h2>
+							<h2>{{isset($customerData['brand']['title']) ? $customerData['brand']['title'] : ''}}</h2>
 							<span>{{__('cruds.customer-front-form.one_time_id_verification')}}</span>
 						</div>
+						
 						<div class="select-area">
 							<select class="niceCountryInputSelector from_code form-control" id="from_code" name="from_country">
 								<option value="USD" data-src="{{asset('assets/kyc/images/flags/AS.png')}}" selected >

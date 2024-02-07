@@ -5,9 +5,7 @@
         <div class="dash-title">
             <h2>{{__('cruds.customer.title_singular')}} {{__('global.detail')}}</h2>
         </div>
-        <div class="add_brand">
-        <a href="{{route('admin.customers.index')}}" class="nbtn gap-2">{{__('global.back')}} </a>
-        </div>
+        
     </div>
     <div class="user-detail-area">
         <div class="row">
@@ -21,55 +19,55 @@
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('global.name')}}</h4>
-                            <span>{{isset($customerData['fullName']) ? $customerData['fullName'] : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['fullName']) ? $customerProfileData['fullName'] : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.brand.title_singular')}} {{__('global.name')}}</h4>
-                            <span>{{isset($customerData['brand']) ? $customerData['brand']['title'] : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['brand']) ? $customerProfileData['brand']['title'] : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.dob')}}</h4>
-                            <span>{{isset($customerData['dob']) ? date('d F, Y',strtotime($customerData['dob'])) : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['dob']) ? date('d F, Y',strtotime($customerProfileData['dob'])) : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.address')}}</h4>
-                            <span>{!! $customerData['address'][0]['fullAddress']!!}</span>
+                            <span>{!! $customerProfileData['address'][0]['fullAddress']!!}</span>
                         </div>
                     </div>
                     <!-- <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.city')}}</h4>
-                            <span>{{$customerData['address'][0]['city']}}</span>
+                            <span>{{$customerProfileData['address'][0]['city']}}</span>
                         </div>
                     </div> -->
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.email')}}</h4>
-                            <span>{{isset($customerData['email']) ? $customerData['email'] : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['email']) ? $customerProfileData['email'] : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.mobile_number')}}</h4>
-                            <span>{{isset($customerData['mobile_number']) ? $customerData['mobile_number'] : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['mobile_number']) ? $customerProfileData['mobile_number'] : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.kyc_status')}}</h4>
-                            <span class="{{$customerData['status']}}">
-                            {{-- @if($customerData['verification_status'] == 1)
+                            <span class="{{$customerProfileData['status']}}">
+                            {{-- @if($customerProfileData['verification_status'] == 1)
                             Complete
                             @else
                             Not Varified
                             @endif --}}
-                            {{isset($customerData['status']) ? ucfirst($customerData['status']) : __('global.N/A')}}
+                            {{isset($customerProfileData['status']) ? ucfirst($customerProfileData['status']) : __('global.N/A')}}
                             
                             </span>
                         </div>
@@ -77,13 +75,13 @@
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.gender')}}</h4>
-                            <span>{{isset($customerData['gender']) ? ucfirst($customerData['gender']) : __('global.N/A')}}</span>
+                            <span>{{isset($customerProfileData['gender']) ? $customerProfileData['gender'] : __('global.N/A')}}</span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="name">
                             <h4>{{__('cruds.customer.fields.approval_type')}}</h4>
-                            <span> {{config('admin.approval_method')[$customerData['approval_type']] ?? __('global.N/A')}}</span>
+                            <span> {{config('admin.approval_method')[$customerProfileData['approval_type']] ?? __('global.N/A')}}</span>
                         </div>
                     </div>
                 </div>
@@ -98,10 +96,10 @@
                 </div>
             </div>
              <div class="row">
-                @if(!empty($customerData))
+                @if(!empty($customerProfileData))
                 
 
-                @foreach($customerData['media'] as $media)
+                @foreach($customerProfileData['media'] as $media)
 
                     <?php
 

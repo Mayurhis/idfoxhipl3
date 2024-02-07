@@ -21,10 +21,49 @@ class HomeController extends Controller
         // ];
         // $data = $this->getRequest($url, $headers);
 
-        $brandCount = $this->getRequest('brands/count')['count'];
-        $customerCount  = $this->getRequest('customers/count')['count'];  
-        $bandList = $this->getRequest('brands')['data']; 
-        return $dataTable->render('admin.dashboard', compact('customerCount', 'brandCount', 'bandList'));       
+        $loggedInUserDetails = session()->get('logged_in_user_detail');
+        $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
+        $userType = $loggedInUserDetails['data']['user']['type'];
+        //dd($loggedInUserDetails);
+        $aud = $accessTokenData->aud;
+        //$aud = 'LL44V4899D1T';//['LL44V4899D1T','LL44V4899D1U'];
+        if(is_null($aud) && $aud == '' ){
+
+            $aud_type = "null";
+            $audience = $aud;
+        }else{
+            if(is_array($aud)){
+                $aud_type = "array";
+                $audience = base64_encode(serialize($aud));
+            }else{
+                $aud_type = "string";
+                $audience = base64_encode($aud);
+            }    
+        }
+        
+        
+        $customerCount  = $this->getRequest('customers/count')['count'];
+        switch ($userType) {
+            case 'admin':
+            case 'user':
+            $brandsGetUrl = 'brands';
+            $brandCount = $this->getRequest('brands/count')['count']; 
+            
+            break;
+            case 'auditor':
+            $brandsGetUrl = 'brands?aud_type='.$aud_type.'&aud='.$audience; 
+            $brandCount = $this->getRequest('brands/count?aud_type='.$aud_type.'&aud='.$audience)['count'];     
+            
+            break;
+            default:
+            $brandsGetUrl = 'brands'; 
+            $brandCount = $this->getRequest('brands/count')['count'];
+             
+        }
+
+
+        $brandList = $this->getRequest($brandsGetUrl)['data'];
+        return $dataTable->render('admin.dashboard', compact('customerCount', 'brandCount', 'brandList'));       
     }
 
     public function kyc_request(){

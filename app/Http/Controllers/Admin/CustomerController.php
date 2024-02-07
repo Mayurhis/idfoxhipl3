@@ -171,7 +171,7 @@ class CustomerController extends Controller
             ],
             [
                 'name' => 'verification_status',
-                'contents' => $request->status == 'approved' ? 1 : 0 ,
+                'contents' => $request->status == 'approved' ? '1' : '0' ,
             ],
             [
                 'name' => 'PhotoIdRadio',
@@ -206,9 +206,7 @@ class CustomerController extends Controller
                 'filename' => $request->file('liveImage')->getClientOriginalName(),
             ];
         }
-
         $postReponse = $this->postRequest($url,$request->all(),'','multipart',$multipart);
-       
         return response()->json($postReponse, $postReponse['code']);
 
 
@@ -358,6 +356,12 @@ class CustomerController extends Controller
     public function getUploadOptions($id,$customer_id=null){
         $url = 'customers/getUploadOptions/'.$id;
         $responseData = $this->getRequest($url);
+
+        $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$id;
+        $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+        $kycConfigurationDetails = $kycConfigurationData['data'];
+
+
         $photoIdListing = [];
         $addressListing= [];
         foreach($responseData['data'] as $response){
@@ -420,8 +424,28 @@ class CustomerController extends Controller
             }
         }
         
-        $html =  view("admin.customers.uploadOptions",compact('photoIdListing','addressListing','customer'))->render();
+        $html =  view("admin.customers.uploadOptions",compact('photoIdListing','addressListing','customer','kycConfigurationDetails'))->render();
         return response()->json($html);
+    }
+
+
+    /**
+     * Display the specified profile as pr user login.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        $loggedInUserDetails = session()->get('logged_in_user_detail');
+        $email = base64_encode($loggedInUserDetails['data']['user']['email']);
+        $url = 'customers/profile/'.$email;
+        $responseData = $this->getRequest($url,$email);
+        $customerProfileData = $responseData['customers'];
+
+        
+        return view("admin.customers.profile", compact('customerProfileData'));
+        
     }
 
 }

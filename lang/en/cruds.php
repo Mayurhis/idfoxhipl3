@@ -15,6 +15,7 @@ return [
     'customer'     => [
         'title'          => 'Customers',
         'title_singular' => 'Customer',
+        'profile'        => 'Profile',
         'fields'         => [
             'dob'                               => 'Date of Birth',
             'address'                           => 'Address',
@@ -54,6 +55,7 @@ return [
         'fields'         => [
             'domain_name'               => 'Domain Name',
             'company_name'              => 'Company Name',
+            'audience'                  => 'Audience',
             'company_name_heading'      => 'The name you would like to show at the top of your KYC module',
             'display_company'           => 'Display Company',
             'display_company_heading'   => 'Would you like to include your Company in the module?',
@@ -167,5 +169,16 @@ return [
         'legal_centre'              => 'legal_centre'
 
 
+    ],
+    'kyc-configurations'     => [
+        'title'          => 'Kyc Configurations',
+        'sidebar_title'  => 'Kyc Configurations',
+        'list_name'      => 'Kyc Configuration List',
+        'fields'         => [
+           'status'            => 'Status',
+            'configuration'  => 'Configuration',
+            'country_residence' => 'Country of Residence',
+            'configuration_label' => 'Please select configuration steps',
+        ],
     ],
 ];

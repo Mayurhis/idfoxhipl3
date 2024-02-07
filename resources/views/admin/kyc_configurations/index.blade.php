@@ -7,10 +7,10 @@
 
 	<div class="main-title add_brand_wrapper">
 						<div class="dash-title">
-							<h2>{{__('cruds.upload-options.list_name')}}</h2>
+							<h2>{{__('cruds.kyc-configurations.list_name')}}</h2>
 						</div>
                         <div class="add_brand">
-                            <a href="{{route('admin.upload-options.create')}}" class="nbtn gap-2"><i class="fi fi-rr-plus"></i>{{__('global.add')}} {{__('cruds.upload-options.title')}}</a>
+                            <a href="{{route('admin.kyc-configurations.create')}}" class="nbtn gap-2"><i class="fi fi-rr-plus"></i>{{__('global.add')}} {{__('cruds.kyc-configurations.title')}}</a>
                         </div></div>
 	<div class="data-fieldtable">
 		<div class="table-responsive-">
@@ -19,13 +19,11 @@
 	</div>
 @endsection
 @section('scripts')
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>
 {!! $dataTable->scripts() !!}
 <script src="{{ asset('assets/admin/sweetalert2/sweetalert2.all.min.js') }}"></script>
 <script>
 	$(document).ready(function () {
-		$(document).on('submit', '.deleteUploadOptionForm', function(e){
+		$(document).on('submit', '.deleteKycConfigurationForm', function(e){
 			e.preventDefault();
 			var formData = $(this).serialize();
 			var url = $(this).attr('action');
@@ -53,7 +51,7 @@
 								confirmButtonText: 'OK'
 							}).then((result) => {
 								if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
-									$('#upload-options-table').DataTable().ajax.reload();
+									$('#kyc-configurations-table').DataTable().ajax.reload();
 								}
 							});
 						},

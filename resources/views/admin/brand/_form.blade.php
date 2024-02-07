@@ -10,6 +10,13 @@
 </div>
 
 <div class="form-group">
+    <label>{{__('cruds.brand.fields.audience')}}</label>
+    <!-- <span class="font-sm">{{__('cruds.brand.fields.company_name_heading')}}</span> -->
+    <input  class="form-control" type="text" placeholder="{{__('global.enter')}} {{__('cruds.brand.fields.audience')}}" name="audience" value="{{ old('audience', isset($brand) ? $brand['data']['audience'] : '') }}" >
+    
+</div>
+
+<div class="form-group">
     <label>{{__('cruds.brand.fields.display_company')}}</label>
     <span class="font-sm">{{__('cruds.brand.fields.display_company_heading')}}</span>
 

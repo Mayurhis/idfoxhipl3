@@ -42,13 +42,17 @@ class KycVerificationController extends Controller
             $customerUrl    = 'kyc/get-customer-detail/'.$customerId;
             $customerData   = $this->getRequest($customerUrl);
             $customerData   = $customerData['data'];
-            //dd($customerData);
-
-            $brand_name = 'Orcapay';
+            $brand_name = $customerData['brand']['title'];
             $brandUrl = 'kyc/get-brand-data/'.$brand_name;
             $brand_Data = $this->getRequest($brandUrl);
             $brand_details = $brand_Data['data']['brand_detail'];
-            return view('kyc.index',compact('data','countries','brand_details','customerData'));
+            $countryId = $customerData['address'][0]['country_id'];
+            $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
+            $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+            $kycConfigurationDetails = $kycConfigurationData['data'];
+
+            //dd($countryId);
+            return view('kyc.index',compact('data','countries','brand_details','customerData','kycConfigurationDetails'));
         }
 
         return view('kyc.error');     
@@ -57,6 +61,7 @@ class KycVerificationController extends Controller
 
     public function checkTokenValidity($token){
         $data = json_decode(base64_decode($token),true);
+        //dd($data);
         // $email = $data['email'];
         // $secretKey = $data['secret_key'];
         $expireTimestamp = $data['expire_timestamp'];
@@ -73,8 +78,25 @@ class KycVerificationController extends Controller
         if(!empty($request->session()->get('kyc-form-data'))){
             $request->session()->forget('kyc-form-data');
         }
+
         $request->session()->put('kyc-form-data', $data);
-        return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
+        $countryId = $request->session()->get('kyc-form-data')['country_id'];
+        $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
+        $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+        $kycConfigurationDetails = $kycConfigurationData['data'];
+
+        $sessionData = $request->session()->get('kyc-form-data');
+        //dd($kycConfigurationDetails);
+        if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
+            if(str_contains(!$kycConfigurationDetails['configuration'], 'photo_id_image')){
+                $this->customerSave($sessionData);
+            }else{
+                return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
+            } 
+        }else{
+            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
+        }
+        
     }
 
     public function storeStep2(KycStoreStepSecondRequest $request)
@@ -96,7 +118,19 @@ class KycVerificationController extends Controller
         $request->session()->put('kyc-form-data', $dataWithStepForm2);
         $sessionData = $request->session()->get('kyc-form-data');
         
-        return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+
+        $countryId = $request->session()->get('kyc-form-data')['country_id'];
+        $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
+        $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+        $kycConfigurationDetails = $kycConfigurationData['data'];
+        if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
+            str_contains($kycConfigurationDetails['configuration'], 'liveliness_image') ? '' : $this->customerSave($sessionData);
+        }else{
+
+            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+        }
+
+        
     }
 
 
@@ -119,8 +153,20 @@ class KycVerificationController extends Controller
         
         $request->session()->put('kyc-form-data', $dataWithStepForm3);
         $sessionData = $request->session()->get('kyc-form-data');
+
+        $countryId = $request->session()->get('kyc-form-data')['country_id'];
+        $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
+        $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+        $kycConfigurationDetails = $kycConfigurationData['data'];
+
         
-        return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+        if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
+            str_contains($kycConfigurationDetails['configuration'], 'address_image') ? '' : $this->customerSave($sessionData);
+        }else{
+            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+        }
+        
+        
     }
 
 
@@ -149,7 +195,7 @@ class KycVerificationController extends Controller
     }
 
     public function customerSave($sessionData){
-
+        //dd('session',$sessionData);
         $url = 'kyc/saveCustomer';
         $multipart =  [
              [
@@ -219,20 +265,31 @@ class KycVerificationController extends Controller
             [
                 'name' => 'brand_id',
                 'contents' => $sessionData['brand_id'],
-            ],
-            [
-                'name' => 'PhotoIdRadio',
-                'contents' => $sessionData['PhotoIdRadio'],
-            ],
-            [
-                'name' => 'addressRadio',
-                'contents' => $sessionData['addressRadio'],
             ]
 
         ];
        
+        if(isset($sessionData['PhotoIdRadio']) && $sessionData['PhotoIdRadio'] != ''){ 
 
-         if($sessionData['photoIdImage'] != ''){ 
+         $multipart[] = [
+                'name' => 'PhotoIdRadio',
+                'contents' => $sessionData['PhotoIdRadio'],
+            ];
+
+           
+        }    
+
+        if(isset($sessionData['addressRadio']) && $sessionData['addressRadio'] != ''){ 
+
+         $multipart[] = [
+                'name' => 'addressRadio',
+                'contents' => $sessionData['addressRadio'],
+            ];
+
+           
+        } 
+
+         if(isset($sessionData['photoIdImage']) && $sessionData['photoIdImage'] != ''){ 
             $multipart[] = [
                 'name' => 'photoIdImage',
                 'contents' => file_get_contents(storage_path('app/temp/'.$sessionData['photoIdImage'])),// file_get_contents($filePath),
@@ -242,7 +299,7 @@ class KycVerificationController extends Controller
            
         }
         
-        if($sessionData['liveImage'] != ''){ 
+        if(isset($sessionData['liveImage']) && $sessionData['liveImage'] != ''){ 
              $multipart[] = [
                 'name' => 'liveImage',
                 'contents' => file_get_contents(storage_path('app/temp/'.$sessionData['liveImage'])),// file_get_contents($filePath),
@@ -251,7 +308,7 @@ class KycVerificationController extends Controller
            
         }
 
-        if($sessionData['addressImage'] != ''){ 
+        if(isset($sessionData['liveImage']) && $sessionData['addressImage'] != ''){ 
             $multipart[] = [
                 'name' => 'addressImage',
                 'contents' => file_get_contents(storage_path('app/temp/'.$sessionData['addressImage'])),// file_get_contents($filePath),
@@ -302,6 +359,8 @@ class KycVerificationController extends Controller
         $responseData = $this->getRequest($url);
         return response()->json($responseData,200);
     }
+
+    
 
 
 }

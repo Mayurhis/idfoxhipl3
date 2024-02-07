@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+
 @section('content')
 
 
@@ -30,6 +31,9 @@
 	</div>
 @endsection
 @section('scripts')
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>
 {!! $dataTable->scripts() !!}
 <script src="{{ asset('assets/admin/sweetalert2/sweetalert2.all.min.js') }}"></script>
 <script>

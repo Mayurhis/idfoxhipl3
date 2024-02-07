@@ -3,7 +3,7 @@
 
 
 use Illuminate\Support\Facades\Route;
-
+use  App\Http\Controllers\Admin\Auth\LoginController;
 
 
 /*
@@ -28,37 +28,20 @@ use Illuminate\Support\Facades\Route;
 
 
 
-/* Admin */
-
-use  App\Http\Controllers\Admin\Auth\LoginController;
-
-
-
-
-
-
-
 Route::group(["name" => "front","namespace" => "App/Http/Controllers"],function(){
-
     Route::get('/', function () {
-
         return redirect()->route("admin.login");
-
     }); 
-
 });
 
-
-
 Route::view("kyc/verification","kyc.index");
-
-Route::get("admin/login", [LoginController::class, 'showLoginForm'])->name("admin.login");
+Route::get('logout', [LoginController::class, 'logout'])->name('logout')->middleware('is-access-token-expire');
+Route::middleware(['guest'])->group(function () {
+    Route::get("admin/login", [LoginController::class, 'showLoginForm'])->name("admin.login");
+    
+});
 
 Route::post("admin/login", [LoginController::class, 'login'])->name("admin.login_submit");
-
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-//,'middleware' => 'auth'
 
 Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"prefix" => "admin" ,'middleware' => ['auth','is-access-token-expire']],function(){
 
@@ -71,6 +54,8 @@ Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"pref
         Route::get('customers/getUploadOptions/{id}/{customerID}', "CustomerController@getUploadOptions")->name('customers.getUploadOptions');
 
         Route::post('email-template-update-status', 'EmailTemplateController@updateStatus')->name('email-templates.updateStatus');
+
+        Route::get('customers/profile', 'CustomerController@profile')->name('customers.profile');
        
         Route::resources([
 
@@ -80,7 +65,9 @@ Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"pref
 
             "upload-options" => "UploadOptionController",
             
-            "email-templates" => "EmailTemplateController"
+            "email-templates" => "EmailTemplateController",
+
+            "kyc-configurations" => "KycConfigurationController",
 
         ]);
 

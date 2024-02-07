@@ -19,10 +19,50 @@ class BrandController extends Controller
 
      */
 
+    public function __construct()
+    {     
+    
+    }
+
     public function index()
     {
-        $brandsGetUrl = 'brands'; 
+        $loggedInUserDetails = session()->get('logged_in_user_detail');
+        $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
+       
+        $userType = $loggedInUserDetails['data']['user']['type'];
+        $aud = $accessTokenData->aud;
+
+        if(is_null($aud) && $aud == '' ){
+
+            $aud_type = "null";
+            $audience = $aud;
+        }else{
+            if(is_array($aud)){
+                $aud_type = "array";
+                $audience = base64_encode(serialize($aud));
+            }else{
+                $aud_type = "string";
+                $audience = base64_encode($aud);
+            }    
+        }
+
+        
+        switch ($userType) {
+            case 'admin':
+            case 'user':
+            $brandsGetUrl = 'brands'; 
+            break;
+            case 'auditor':
+            $brandsGetUrl = 'brands?aud_type='.$aud_type.'&aud='.$audience; 
+            break;
+            default:
+            $brandsGetUrl = 'brands'; 
+        }
+
         $brand = $this->getRequest($brandsGetUrl);
+        
+        //$brandsGetUrl = 'brands'; 
+        //$brand = $this->getRequest($brandsGetUrl);
         return view("admin.brand.index",compact('brand'));
     }
 
@@ -73,6 +113,10 @@ class BrandController extends Controller
                 'contents' => $request->title,
             ],
             [
+                'name' => 'audience',
+                'contents' => $request->audience,
+            ],
+            [
                 'name' => 'display_name',
                 'contents' => $request->display_name,
             ],
@@ -109,9 +153,9 @@ class BrandController extends Controller
                 'filename' => $request->file('logo')->getClientOriginalName(),
             ];
         }
-
+        //dd($multipart);
         $postReponse = $this->postRequest($storeUrl,$postData,'','multipart', $multipart);
-
+        //dd($postReponse);
         return response()->json($postReponse, $postReponse['code']);
 
     }
@@ -191,6 +235,10 @@ class BrandController extends Controller
                 'contents' => $request->title,
             ],
             [
+                'name' => 'audience',
+                'contents' => $request->audience,
+            ],
+            [
                 'name' => 'display_name',
                 'contents' => $request->display_name,
             ],
@@ -229,9 +277,9 @@ class BrandController extends Controller
             ];
         }
         
-        
+        //dd($multipart);
         $postReponse = $this->postRequest($updateUrl,$postData,'','multipart', $multipart);
-       
+        //dd($postReponse);
         return response()->json($postReponse, $postReponse['code']);
     }
 

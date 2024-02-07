@@ -2,8 +2,7 @@
 	updateRootVariables("{{$brand_details['accent_color']}}");
 	function updateRootVariables(primaryColor) {
             $(':root').css('--primary', primaryColor);
-            //$('html').attr('data-bs-theme',theme);
-        }
+    }
 
   var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase());
 
@@ -16,34 +15,7 @@
 		$(".take_address_pic").hide();
 	}
     $(document).ready(function(){
-    	// var width = $(window).width();
-    	// console.log(width);
-	    // if (width < 768) {
-	    //     $(".take_photo_id_pic").show();
-	    // }else{
-	    // 	$(".take_photo_id_pic").hide();
-	    // }
-	    
-
-    	
-     	var brand_name = 'Orcapay';
-       	$.ajax({
-            type: "GET",
-            url: 'get-brand-data/'+brand_name,
-            contentType: false,
-            success: function(ajaxResponse) {
-            	var theme = ajaxResponse.data.brand_detail.theme;
-            	var primaryColor = ajaxResponse.data.brand_detail.accent_color;
-            	$('.head-titlearea h2').text(brand_name);
-            	
-    
-            },
-            error: function() {}
-        })
-
-        
-
-		$(document).on("submit","#kycVerifiactionStep1",function(e){
+    	$(document).on("submit","#kycVerifiactionStep1",function(e){
             e.preventDefault();
             var form1Next = $('.submit-form-1');
             $('#kycVerifiactionStep1').validate({
@@ -113,9 +85,6 @@
                     success: function(response) { 
 						$('.pageloader').removeClass('d-block');
                         $('.pageloader').addClass('d-none');
-
-						
-						
 						putDataInDetail(response.data);
 					   
 					   $('.tab-bottom-blog').removeClass('edit-open');
@@ -128,6 +97,7 @@
 			                success: function(ajaxResponse) {
 			                	$("#photoUplaodOptions").html(ajaxResponse['htmlPhotoIdListing']);
 			                    $("#addressUplaodOptions").html(ajaxResponse['htmlAddressListing']);
+
 			                    
 			                },
 			                error: function() {}
@@ -370,15 +340,14 @@
 						$('.pageloader').addClass('d-block');
 					},
 					success: function (response) {
-						console.log('successResponse :' + response );
 						$('.pageloader').removeClass('d-block');
 						$('.pageloader').addClass('d-none');
 
-						if(formId == 'kycVerifiactionStep4'){
-							$('#id-vercomplete').modal('show');
-						}else{
+						if(response.message == "form submitted"){
 							getNextStep(formNext);
-						}
+						}else{
+							$('#id-vercomplete').modal('show');
+						} 
 
 					},
 					error: function (response) {
