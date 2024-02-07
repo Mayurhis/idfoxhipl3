@@ -57,6 +57,8 @@
                 },
                 error: function(response) {
                     // console.log(response.responseJSON.message);
+                    $("#step2").html('');
+                    $("#step2").css("display", "none");
                     toastr.error(response.responseJSON.message);
                 }
             })
