@@ -87,16 +87,19 @@ class KycVerificationController extends Controller
 
         $sessionData = $request->session()->get('kyc-form-data');
         //dd($kycConfigurationDetails);
+        
         if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
-            if(str_contains(!$kycConfigurationDetails['configuration'], 'photo_id_image')){
-                $this->customerSave($sessionData);
-            }else{
+            if(str_contains($kycConfigurationDetails['configuration'], 'photo_id_image') || str_contains($kycConfigurationDetails['configuration'], 'liveliness_image') || str_contains($kycConfigurationDetails['configuration'], 'address_image')){
                 return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
-            } 
+            }else{
+                $this->customerSave($sessionData);
+                
+            }    
         }else{
             return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
         }
         
+         
     }
 
     public function storeStep2(KycStoreStepSecondRequest $request)
@@ -124,12 +127,15 @@ class KycVerificationController extends Controller
         $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
         $kycConfigurationDetails = $kycConfigurationData['data'];
         if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
-            str_contains($kycConfigurationDetails['configuration'], 'liveliness_image') ? '' : $this->customerSave($sessionData);
+            if(str_contains($kycConfigurationDetails['configuration'], 'liveliness_image') || str_contains($kycConfigurationDetails['configuration'], 'address_image')){
+                return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
+            }else{
+                $this->customerSave($sessionData);
+                
+            }    
         }else{
-
-            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
         }
-
         
     }
 
@@ -159,11 +165,15 @@ class KycVerificationController extends Controller
         $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
         $kycConfigurationDetails = $kycConfigurationData['data'];
 
-        
         if(isset($kycConfigurationDetails['configuration']) && $kycConfigurationDetails['configuration'] != ''){
-            str_contains($kycConfigurationDetails['configuration'], 'address_image') ? '' : $this->customerSave($sessionData);
+            if(str_contains($kycConfigurationDetails['configuration'], 'address_image')){
+                return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
+            }else{
+                $this->customerSave($sessionData);
+                
+            }    
         }else{
-            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $sessionData], 200);
+            return response()->json(['status' => true, "message" => 'form submitted', 'data' => $data], 200);
         }
         
         
@@ -308,7 +318,7 @@ class KycVerificationController extends Controller
            
         }
 
-        if(isset($sessionData['liveImage']) && $sessionData['addressImage'] != ''){ 
+        if(isset($sessionData['addressImage']) && $sessionData['addressImage'] != ''){ 
             $multipart[] = [
                 'name' => 'addressImage',
                 'contents' => file_get_contents(storage_path('app/temp/'.$sessionData['addressImage'])),// file_get_contents($filePath),

@@ -19,7 +19,7 @@ class AuthenticateAdminApiHeaders
         // $authKey = $request->header('Authorization');
         $contentType = $request->header('Content-Type');
         $acceptType = $request->header('Accept');
-        dd($contentType,$acceptType);
+        //dd($contentType,$acceptType);
         if ($this->validateHeaders($contentType,$acceptType)) {
             // if($this->isValidApiKey($authKey)) {
             //     return $next($request);

@@ -55,7 +55,10 @@
                     $("#step2").css("display", "block");
 
                 },
-                error: function() {}
+                error: function(response) {
+                    // console.log(response.responseJSON.message);
+                    toastr.error(response.responseJSON.message);
+                }
             })
            return true;  
     }

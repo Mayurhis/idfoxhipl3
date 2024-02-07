@@ -58,14 +58,14 @@
 									</a>
 								</li>
 
-								{{-- <li>
+								<li>
 									<a href="{{route('admin.email-templates.index')}}" title="{{__('cruds.email-templates.title')}}"   class="{{request()->is("admin/email-templates")  || request()->is("admin/email-templates*")? 'active' :''}}" >
 										<div class="menu-img">
 											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.email-templates.title')}}">
 										</div>
 										{{__('cruds.email-templates.title')}}
 									</a>
-								</li> --}}
+								</li> 
 
 								<li>
 									<a href="{{route('logout')}}" title="{{__('global.logout')}}">

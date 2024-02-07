@@ -28,6 +28,7 @@ class DashboardDataTable extends DataTable
     {
         return datatables()
             ->collection($query)
+            ->addIndexColumn()
             ->editColumn('fullName', function($record) { 
                 return $record['fullName'];
             })
@@ -103,6 +104,7 @@ class DashboardDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('DT_RowIndex')->title('#')->orderable(false)->searchable(false),
             Column::make('fullName')->title(__('global.name')),
             Column::make('brand_title')->title(__('cruds.brand.title_singular').' '. __('global.name')),
             Column::make('dob')->title(__('cruds.customer.fields.dob')),

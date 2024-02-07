@@ -79,6 +79,10 @@
             $('body').find('.contactError').remove();
             var addressPhotoRadio = $('input[name="AddressPhotoRadio"]:checked');
             var photoIdRadio = $('input[name="PhotoIdRadio"]:checked');
+            if($('#brandListSelect').find(':selected').prop('disabled')){
+                toastr.error('Selected brand has been deleted. Please select another brand', 'Error!');
+                return false;
+            }
             if (photoIdRadio.hasClass('uploadOption-changed')) {
                 toastr.error('Selected photo image upload option has been either deleted or removed as default upload option. Please select another one and upload new image', 'Error!');
                 return false;

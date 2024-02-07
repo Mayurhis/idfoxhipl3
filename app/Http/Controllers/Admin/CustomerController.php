@@ -79,10 +79,19 @@ class CustomerController extends Controller
         $bandList = $this->getRequest('brands')['data'];
         $customerUrl = 'customers/'.$id.'/edit';
         $customers = $this->getRequest($customerUrl);
-       
         $countriesList = $countries['data'];
-        $customer = $customers['data'];
-        return view("admin.customers.edit", compact('customer','countriesList','bandList'));
+        $customer = $customers['data']; 
+        $getCustomerBrand = $this->getRequest('customers/get-customers-brand/'.$customer['brand_id'])['data']; 
+        $exists = false;
+        foreach ($bandList as $item) {
+            if ($getCustomerBrand[0]['id'] === $item['id']) {
+                $exists = true;
+            }
+        }
+        if(!$exists){
+            $bandList = array_merge($bandList,$getCustomerBrand);
+        }
+        return view("admin.customers.edit", compact('customer','countriesList','bandList','getCustomerBrand'));
         
     }
 
@@ -423,9 +432,13 @@ class CustomerController extends Controller
                 }
             }
         }
-        
-        $html =  view("admin.customers.uploadOptions",compact('photoIdListing','addressListing','customer','kycConfigurationDetails'))->render();
-        return response()->json($html);
+
+        if(!empty($addressListing) && !empty($photoIdListing)){
+            $html =  view("admin.customers.uploadOptions",compact('photoIdListing','addressListing','customer','kycConfigurationDetails'))->render();
+            return response()->json($html);
+        }else{
+            return response()->json(['success' => false, 'message' => 'Add default Upload Options to move forward to the next step'], 400);
+        }
     }
 
 

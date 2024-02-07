@@ -1,55 +1,79 @@
 <hr class="my-3">
-<!-- STEP 2 -->
-<div class="step2">
+@php
+$defaultImagePath 			= asset('assets/admin/images/default-img.png');
+$photoIdMediaPath 			= $defaultImagePath;
+$addressMediaPath 			= $defaultImagePath;
+$liveMediaPath 	  			= $defaultImagePath;
+$photoIdDisabledClass 	  	= 'disabled-file';
+$addressDisabledClass 	  	= 'disabled-file';
 
+
+$addressDataArray = '';
+$liveDataAarray = '';
+
+$photoRadioChecked = 0;
+$addressRadioChecked = 0;
+if(isset($customer) && !empty($customer) && !empty($customer['media'])){
+	
+	foreach($customer['media'] as $media){
+
+		switch ($media['upload_type']) {
+		  case 'photo_id_image':
+		  	$photoIdDisabledClass = '';
+		    $photoIdDataArray = $media;
+		    $photoIdMediaPath = $media['path'];
+		    $photoRadioChecked = $photoIdDataArray['upload_option_id'];
+		    break;
+		  case 'address_proof_image':
+		  	$addressDisabledClass = '';
+		    $addressDataArray = $media;
+		    $addressMediaPath = $media['path'];
+		    $addressRadioChecked = $addressDataArray['upload_option_id'];
+		    break;
+		  case 'liveliness_image':
+		  	
+		    $liveDataAarray = $media;
+		    $liveMediaPath = $media['path'];
+		    break;
+		  default:
+		    
+		}
+
+	}
+
+}
+
+$isPhotoId = false;
+$isAddressId = false;
+$isLiveId = false;
+
+if($kycConfigurationDetails){
+	if(str_contains($kycConfigurationDetails['configuration'], 'photo_id_image')){
+		$isPhotoId = true;
+	}
+	if(str_contains($kycConfigurationDetails['configuration'], 'liveliness_image')){
+		$isLiveId = true;
+	}
+
+	if(str_contains($kycConfigurationDetails['configuration'], 'address_image')){
+		$isAddressId = true;
+	}
+}else{
+	$isPhotoId = true;
+	$isAddressId = true;
+	$isLiveId = true;
+}
+
+
+@endphp
+<!-- STEP 2 -->
+@if($isPhotoId)
+<div class="step2">
 	<div class="photo_id photoDiv">
 		<h5 class="size-18 customer-title">{{__('cruds.customer.id_photograph_heading')}}</h5>
 		
 		<ul class="photo-fields">
-			<?php 
-			$defaultImagePath 			= asset('assets/admin/images/default-img.png');
-			$photoIdMediaPath 			= $defaultImagePath;
-			$addressMediaPath 			= $defaultImagePath;
-			$liveMediaPath 	  			= $defaultImagePath;
-			$photoIdDisabledClass 	  	= 'disabled-file';
-			$addressDisabledClass 	  	= 'disabled-file';
 			
-			
-			$addressDataArray = '';
-			$liveDataAarray = '';
-
-			$photoRadioChecked = 0;
-			$addressRadioChecked = 0;
-			if(isset($customer) && !empty($customer) && !empty($customer['media'])){
-				
-				foreach($customer['media'] as $media){
-
-					switch ($media['upload_type']) {
-					  case 'photo_id_image':
-					  	$photoIdDisabledClass = '';
-					    $photoIdDataArray = $media;
-					    $photoIdMediaPath = $media['path'];
-					    $photoRadioChecked = $photoIdDataArray['upload_option_id'];
-					    break;
-					  case 'address_proof_image':
-					  	$addressDisabledClass = '';
-					    $addressDataArray = $media;
-					    $addressMediaPath = $media['path'];
-					    $addressRadioChecked = $addressDataArray['upload_option_id'];
-					    break;
-					  case 'liveliness_image':
-					  	
-					    $liveDataAarray = $media;
-					    $liveMediaPath = $media['path'];
-					    break;
-					  default:
-					    
-					}
-
-				}
-
-			}
-			?>
 			@foreach($photoIdListing as $photoIdData)
 			
 			<li>
@@ -117,8 +141,10 @@
 		</div>
 	</div>
 </div>
-<!--  -->
 <hr class="my-3">
+@endif
+<!--  -->
+@if($isAddressId)
 <div class="step2">
 	<div class="photo_id addressDiv">
 		<h5 class="size-18 customer-title">{{__('cruds.customer.address_proof_heading')}}</h5>
@@ -191,7 +217,11 @@
 	</div>
 </div>
 <hr class="my-3">
+@endif
+
 <!--  -->
+@if($isLiveId)
+
 <div class="step2">
 	<div class="photo_id liveDiv">
 		<h5 class="size-18 customer-title">{{__('cruds.customer.live_photo')}} </h5>
@@ -232,3 +262,4 @@
 		</div>
 	</div>
 </div>
+@endif

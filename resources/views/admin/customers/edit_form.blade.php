@@ -178,12 +178,21 @@
 		<div class="col-12 col-xl-4 col-lg-4 col-md-6 col-sm-6">
 			<div class="form-group detail-fields select-box-wrap">
 				<label>{{__('cruds.brand.title_singular')}} {{__('global.name')}} <span class="text-danger">*</span> </label>
-
-				<select class="niceCountryInputSelector selectinit form-control" name="brand_id">
+				@if(!is_null($getCustomerBrand[0]['deleted_at']))
+					<div class="info-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><g id="_01_align_center" data-name="01 align center"><path d="M12,24A12,12,0,1,1,24,12,12.013,12.013,0,0,1,12,24ZM12,2A10,10,0,1,0,22,12,10.011,10.011,0,0,0,12,2Z"/><path d="M14,19H12V12H10V10h2a2,2,0,0,1,2,2Z"/><circle cx="12" cy="6.5" r="1.5"/></g></svg>
+					</div>
+					<div class="note-box document-proof-info">
+						<span>
+							Selected brand has been deleted. Please select another brand
+						</span>
+					</div>
+				@endif
+				<select class="niceCountryInputSelector selectinit form-control" name="brand_id" id="brandListSelect">
 					<option value="">--{{__('global.select')}} {{__('cruds.brand.title_singular')}}--</option>
 					@if(!empty($bandList))
 					@foreach($bandList as $key=>$value)
-					<option value="{{$value['id']}}" {{$customer['brand_id'] == $value['id'] ? 'selected' : ''}}>{{$value['title']}}</option>
+					<option value="{{$value['id']}}" {{$customer['brand_id'] == $value['id'] ? 'selected' : ''}} {{!is_null($value['deleted_at']) ? 'disabled':''}}>{{$value['title']}}</option>
 					@endforeach
 					@endif
 				</select>
