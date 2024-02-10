@@ -14,8 +14,8 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/main.css')}}" async>
         <link rel="stylesheet" href="{{asset('assets/admin/toastr/toastr.min.css')}}">
     </head>
+
     <body class="admin-dashboard">
-    
         <div class="login-wrapper">
             <div class="container">
             

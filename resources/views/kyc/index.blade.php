@@ -50,22 +50,23 @@
 		<div class="tab-content-block">
 			<div class="container">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12">	
 						<div class="tab-bottom-blog edit-open form-step-1">
 							@include("kyc.form_steps.step1")
-							@php
-						    $configurations = explode(',', $kycConfigurationDetails['configuration']);
-							@endphp
+							
 							@if($kycConfigurationDetails)
+								@php
+						    	$configurations = explode(',', $kycConfigurationDetails['configuration']);
+						    	@endphp
 								@includeWhen(in_array('photo_id_image', $configurations), 'kyc.form_steps.step2')
 								@includeWhen(in_array('liveliness_image', $configurations), 'kyc.form_steps.step3')
 								@includeWhen(in_array('address_image', $configurations), 'kyc.form_steps.step4')
 							@else
-								@include("kyc.form_steps.step1")
 								@include("kyc.form_steps.step2")
 								@include("kyc.form_steps.step3")
 								@include("kyc.form_steps.step4")
 							@endif
+							
 						</div>
 					</div>
 				</div>

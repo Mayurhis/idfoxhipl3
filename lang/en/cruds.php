@@ -16,6 +16,7 @@ return [
         'title'          => 'Customers',
         'title_singular' => 'Customer',
         'profile'        => 'Profile',
+        'kyc_title'      => 'KYC Requests',
         'fields'         => [
             'dob'                               => 'Date of Birth',
             'address'                           => 'Address',
@@ -42,7 +43,8 @@ return [
             'middle_name_placeholder'           => 'Middle Name',
             'suffix_placeholder'                => 'Suffix',
             'last_name_placeholder'             => 'Last Name',
-            'dob_placeholder'                   => 'YYYY-MM-DD',  
+            'dob_placeholder'                   => 'YYYY-MM-DD', 
+            'kyc_status'                        => 'Kyc Status', 
         ],
         'id_photograph_heading' => 'Photo of ID Photograph any of these',
         'address_proof_heading' => 'Address proof any of these',

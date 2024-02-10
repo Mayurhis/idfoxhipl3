@@ -67,8 +67,9 @@ class LoginController extends Controller
         
     }
     
-    public function logout()
+    public function logout(Request $request, $tokenInvalid = null)
     {
+
         $loggedInUserDetails = session()->get('logged_in_user_detail');
         $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
         $UserLoginService = new UserLoginService;
@@ -78,9 +79,13 @@ class LoginController extends Controller
             request()->session()->invalidate();
             Session::flush();
             $user = User::where('email',$accessTokenData->email)->delete();
+            if(!is_null($tokenInvalid)){
+                return redirect()->route('admin.login')->with(['alert-type'=>'error','message'=>'Jwt Token is invalid, so you are logout forcefully!']);    
+            }
             return redirect()->route('admin.login');
         }
         
+
         
     }
 

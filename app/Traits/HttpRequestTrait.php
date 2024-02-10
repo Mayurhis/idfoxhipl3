@@ -4,8 +4,10 @@ namespace App\Traits;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ClientException;
-
-
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Firebase\JWT\JWT;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 trait HttpRequestTrait
 {    
@@ -21,6 +23,7 @@ trait HttpRequestTrait
             'accept' => 'application/json',
             'content-type' => 'application/json',
             'accepted-lang' => $lang,
+            'secret-token' => env('IAM_SECRET'),
         ];
     }
 
@@ -28,29 +31,31 @@ trait HttpRequestTrait
     public function getRequest($url, $params = '')
     {   
        try {
+            $loggedInUserDetails = session()->get('logged_in_user_detail');
+            $secretToken = $loggedInUserDetails['data']['access_token'];
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
-            //dd($url);
             if ($params != "") {
                 $url = $url . "?" . $params;
             }
+            $headers = [
+                'accept' => 'application/json',
+                'Authorization' => 'Bearer '.$secretToken,
+            ];
             
             $response =  $client->request('GET', $url, [
-                'headers' => $this->headers,
+                'headers' => $headers,
             ]); 
+
             $body = $response->getBody()->getContents();
-            //dd($body);
             return json_decode($body, true);
         }catch (ConnectException $e) {
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage(), 'data' => []];
         } catch(ClientException $e){
-            dd($e->getMessage(),'fsdf');
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => json_decode( $e->getResponse()->getBody()), 'data' => []];
         } catch(\Exception $e){
-            dd($e->getMessage());
             $response = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage()];
         }
-    //    dd($response);
         return response()->json($response);
     }
 
@@ -58,10 +63,13 @@ trait HttpRequestTrait
     public function postRequest($url,$body = null, $params = "",$formType = '', $formData = '')
     {  
        try {
-           
+
+            $loggedInUserDetails = session()->get('logged_in_user_detail');
+            $secretToken = $loggedInUserDetails['data']['access_token'];
             $headers = [
                 'accept' => 'application/json',
                 'accepted-lang' => app()->getLocale(),
+                'Authorization' => 'Bearer '.$secretToken,
             ];
 
             if($formType !== 'multipart'){
@@ -69,23 +77,18 @@ trait HttpRequestTrait
             }
 
             $url = $this->apiUrl.$url;
-            //dd($formData);
             $client = new Client(); 
             $response = $client->request('POST', $url, [
                 $formType => $formData,
                 'headers' => $headers
             ]);
             $body = $response->getBody()->getContents();
-            //dd($body);
             return json_decode($body, true);
         }catch (ConnectException $e) {
-            //dd($e);
             $result = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage() , 'data' => []];
         } catch(ClientException $e){
-            //dd($e);
             $result = ['status' => false, 'code' => $e->getCode(), 'message' => json_decode( $e->getResponse()->getBody()), 'data' => []];
         } catch(\Exception $e){
-            //dd($e);
             $result = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage()];
         }
 
@@ -95,10 +98,12 @@ trait HttpRequestTrait
     public function patchRequest($url,$body = null, $params = "",$formType = '', $formData = '')
     {    
         try {
-           
+            $loggedInUserDetails = session()->get('logged_in_user_detail');
+            $secretToken = $loggedInUserDetails['data']['access_token'];
             $headers = [
                 'accept' => 'application/json',
                 'accepted-lang' => app()->getLocale(),
+                'Authorization' => 'Bearer '.$secretToken,
             ];
 
             if($formType !== 'multipart'){
@@ -133,9 +138,15 @@ trait HttpRequestTrait
          try {
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
-            
+            $loggedInUserDetails = session()->get('logged_in_user_detail');
+            $secretToken = $loggedInUserDetails['data']['access_token'];
+            $headers = [
+                'accept' => 'application/json',
+                'accepted-lang' => app()->getLocale(),
+                'Authorization' => 'Bearer '.$secretToken,
+            ];
             $response =  $client->request('DELETE', $url, [
-                'headers' => $this->headers,
+                'headers' => $headers,
             ]); 
             $body = $response->getBody()->getContents();
             
@@ -212,7 +223,6 @@ trait HttpRequestTrait
             
             $result = ['status' => false, 'code' => $e->getCode(), 'message' => $e->getMessage()];
         }
-        //dd($result);
         return $result;
 
     }

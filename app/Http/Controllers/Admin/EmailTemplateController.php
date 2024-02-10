@@ -18,7 +18,11 @@ class EmailTemplateController extends Controller
      */
     public function index(EmailTemplateDataTable $dataTable)
     {
-        return $dataTable->render("admin.email-templates.index");
+        try{
+            return $dataTable->render("admin.email-templates.index");
+        }catch(\Throwable $th){
+            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
+        }    
     }
 
     /**
@@ -61,13 +65,16 @@ class EmailTemplateController extends Controller
      */
     public function edit($id)
     {
-        $emailTemplate = $this->getRequest('email-templates/'.$id.'/edit');
-       // dd($emailTemplate);
-        if ($emailTemplate) {
-            return view("admin.email-templates.edit",compact('emailTemplate'));
-        } else {
-            $errorMessage = $response->json('message');
-        }
+        try{
+            $emailTemplate = $this->getRequest('email-templates/'.$id.'/edit');
+            if ($emailTemplate) {
+                return view("admin.email-templates.edit",compact('emailTemplate'));
+            } else {
+                $errorMessage = $response->json('message');
+            }
+        }catch(\Throwable $th){
+            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
+        }    
     }
 
     /**
@@ -79,11 +86,15 @@ class EmailTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->except('_method','_token');
-        $updateUrl = 'email-templates/update/'.$id; 
-        $postReponse = $this->postRequest($updateUrl,$postData,'','json', $postData);
+        try{
+            $postData = $request->except('_method','_token');
+            $updateUrl = 'email-templates/update/'.$id; 
+            $postReponse = $this->postRequest($updateUrl,$postData,'','json', $postData);
 
-        return response()->json($postReponse, $postReponse['code']);
+            return response()->json($postReponse, $postReponse['code']);
+        }catch(\Throwable $th){
+            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
+        }    
     }
 
     /**
@@ -99,10 +110,13 @@ class EmailTemplateController extends Controller
 
     public function updateStatus(Request $request)
     {
-        $postData = $request->except('_token');
-        $updateStatusUrl = 'email-templates/update-status'; 
-        $postReponse = $this->postRequest($updateStatusUrl,$postData,'','json', $postData);
-        return response()->json($postReponse, $postReponse['code']);
-        //dd($data);
+        try{
+            $postData = $request->except('_token');
+            $updateStatusUrl = 'email-templates/update-status'; 
+            $postReponse = $this->postRequest($updateStatusUrl,$postData,'','json', $postData);
+            return response()->json($postReponse, $postReponse['code']);
+        }catch(\Throwable $th){
+            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
+        }
     }
 }

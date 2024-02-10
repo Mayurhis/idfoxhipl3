@@ -3,6 +3,17 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/sweetalert2/sweetalert2.min.css') }}">
 @endsection
 @section('content')
+    <div class="pageloader d-none">
+        <div class="loader">
+            <div class="line-scale">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="main-title add_brand_wrapper">
         <div class="dash-title">
             <h2>{{__('global.create')}} {{__('cruds.upload-options.title')}}</h2>
@@ -89,10 +100,12 @@
                         //'Accept' : 'application/json',
                     },
                     beforeSend:function(){
-                       // $('.overlay').show();
+                        $('.pageloader').removeClass('d-none');
+                        $('.pageloader').addClass('d-block');
                     },
                     success: function(response) { 
-
+                        $('.pageloader').removeClass('d-block');
+                        $('.pageloader').addClass('d-none');
                         swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -107,6 +120,9 @@
                     },
                     error: function(response) {
                         if(response.responseJSON && response.responseJSON.code == 422){
+                            $('.pageloader').removeClass('d-block');
+                            $('.pageloader').addClass('d-none');
+                            
                             $('body').find('.contactError').remove();
                             const errorMessage = response.responseJSON.message;
                             if (errorMessage && errorMessage.errors) {

@@ -16,7 +16,7 @@
 								<li>
 									<a href="{{route('admin.brands.index')}}" title="{{__('cruds.brand.title')}}" class="{{request()->is("admin/brands")  || request()->is("admin/brands*")? 'active' :''}}">
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/brand.svg')}}" alt="{{__('cruds.brand.title')}}">
+											<img src="{{asset('assets/admin/images/brands.svg')}}" alt="{{__('cruds.brand.title')}}">
 										</div>
 										{{__('cruds.brand.title')}}
 									</a>
@@ -25,7 +25,7 @@
 								<li>
 									<a href="{{route('admin.customers.index')}}" title="{{__('cruds.customer.title')}}" class="{{request()->is("admin/customers")  || request()->is("admin/customers*")? 'active' :''}}">
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.customer.title')}}">
+											<img src="{{asset('assets/admin/images/customers.svg')}}" alt="{{__('cruds.customer.title')}}">
 										</div>
 										{{__('cruds.customer.title')}}
 									</a>
@@ -34,7 +34,7 @@
 								<li>
 									<a href="{{route('admin.kyc_request')}}" title="{{__('cruds.kyc_request.title')}}"   class="{{request()->is("admin/kyc-request")  || request()->is("admin/kyc-request*")? 'active' :''}}" >
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.kyc_request.title')}}">
+											<img src="{{asset('assets/admin/images/kyc-requests.svg')}}" alt="{{__('cruds.kyc_request.title')}}">
 										</div>
 										{{__('cruds.kyc_request.title')}}
 									</a>
@@ -43,7 +43,7 @@
 								<li>
 									<a href="{{route('admin.upload-options.index')}}" title="{{__('cruds.upload-options.sidebar_title')}}"   class="{{request()->is("admin/upload-options")  || request()->is("admin/upload-options*")? 'active' :''}}" >
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.upload-options.sidebar_title')}}">
+											<img src="{{asset('assets/admin/images/upload-options.svg')}}" alt="{{__('cruds.upload-options.sidebar_title')}}">
 										</div>
 										{{__('cruds.upload-options.sidebar_title')}}
 									</a>
@@ -52,7 +52,7 @@
 								<li>
 									<a href="{{route('admin.kyc-configurations.index')}}" title="{{__('cruds.kyc-configurations.sidebar_title')}}"   class="{{request()->is("admin/kyc-configurations")  || request()->is("admin/kyc-configurations*")? 'active' :''}}" >
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.upload-options.sidebar_title')}}">
+											<img src="{{asset('assets/admin/images/shield-tick.svg')}}" alt="{{__('cruds.upload-options.sidebar_title')}}">
 										</div>
 										{{__('cruds.kyc-configurations.sidebar_title')}}
 									</a>
@@ -61,7 +61,7 @@
 								<li>
 									<a href="{{route('admin.email-templates.index')}}" title="{{__('cruds.email-templates.title')}}"   class="{{request()->is("admin/email-templates")  || request()->is("admin/email-templates*")? 'active' :''}}" >
 										<div class="menu-img">
-											<img src="{{asset('assets/admin/images/profile-white.svg')}}" alt="{{__('cruds.email-templates.title')}}">
+											<img src="{{asset('assets/admin/images/email.svg')}}" alt="{{__('cruds.email-templates.title')}}">
 										</div>
 										{{__('cruds.email-templates.title')}}
 									</a>

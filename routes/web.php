@@ -35,7 +35,7 @@ Route::group(["name" => "front","namespace" => "App/Http/Controllers"],function(
 });
 
 Route::view("kyc/verification","kyc.index");
-Route::get('logout', [LoginController::class, 'logout'])->name('logout')->middleware('is-access-token-expire');
+Route::get('logout/{tokenInvalid?}', [LoginController::class, 'logout'])->name('logout')->middleware('is-access-token-expire');
 Route::middleware(['guest'])->group(function () {
     Route::get("admin/login", [LoginController::class, 'showLoginForm'])->name("admin.login");
     

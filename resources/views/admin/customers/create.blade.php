@@ -3,7 +3,17 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/sweetalert2/sweetalert2.min.css') }}">
 @endsection
 @section('content')
-
+    <div class="pageloader d-none">
+        <div class="loader">
+            <div class="line-scale">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="mobile-header d-md-none">
         <div class="mob-logo">
             <a href="javascript:void(0)" title="logo"><img src="images/logo.png" alt="logo" class="img-fluid"></a>
@@ -125,9 +135,13 @@
                        
                     },
                     beforeSend:function(){
-                      
+                        $('.pageloader').removeClass('d-none');
+                        $('.pageloader').addClass('d-block');
                     },
                     success: function(response) { 
+                        $('.pageloader').removeClass('d-block');
+                        $('.pageloader').addClass('d-none');
+
                         swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -141,6 +155,9 @@
                     },
                     error: function(response) {
                         if(response.responseJSON.code == 422){
+                            $('.pageloader').removeClass('d-block');
+                            $('.pageloader').addClass('d-none');
+
                             $('body').find('.contactError').remove();
                             const errorMessage = response.responseJSON.message;
                             if (errorMessage && errorMessage.errors) {

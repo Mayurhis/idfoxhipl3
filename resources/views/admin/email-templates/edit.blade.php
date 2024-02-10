@@ -4,7 +4,17 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/summernote/summernote-bs4.min.css') }}">
 @endsection
 @section('content')
-	
+	<div class="pageloader d-none">
+    <div class="loader">
+        <div class="line-scale">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    </div>
 	<div class="main-title add_brand_wrapper">
 		<div class="dash-title">
 			<h2>{{__('global.edit')}} {{__('cruds.email-templates.title')}}</h2>
@@ -192,9 +202,13 @@
                       
                     },
                     beforeSend:function(){
-                       // $('.overlay').show();
+                        $('.pageloader').removeClass('d-none');
+                        $('.pageloader').addClass('d-block');
                     },
                     success: function(response) { 
+                        $('.pageloader').removeClass('d-block');
+                        $('.pageloader').addClass('d-none');
+
                         swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -208,6 +222,9 @@
                     },
                     error: function(response) {
                         if(response.responseJSON.code == 422){
+                            $('.pageloader').removeClass('d-block');
+                            $('.pageloader').addClass('d-none');
+
                             $('body').find('.contactError').remove();
                             const errorMessage = response.responseJSON.message;
                             if (errorMessage && errorMessage.errors) {

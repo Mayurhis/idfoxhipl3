@@ -50,8 +50,6 @@ class KycVerificationController extends Controller
             $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
             $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
             $kycConfigurationDetails = $kycConfigurationData['data'];
-
-            //dd($countryId);
             return view('kyc.index',compact('data','countries','brand_details','customerData','kycConfigurationDetails'));
         }
 
@@ -73,7 +71,7 @@ class KycVerificationController extends Controller
     }
 
     public function storeStep1(KycStoreStepFirstRequest $request)
-    {
+    {   
         $data = $request->except('_token');
         if(!empty($request->session()->get('kyc-form-data'))){
             $request->session()->forget('kyc-form-data');

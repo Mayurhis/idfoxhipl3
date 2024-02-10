@@ -49,7 +49,7 @@ class KycCOnfigurationDataTable extends DataTable
                 
             })  
              ->editColumn('configuration', function($record) { 
-                return $record['configuration'] ?? __('global.N/A');
+                return $record['configuration'] ? ucwords(str_replace(['_', ','], [' ', ', '], $record['configuration'])) : __('global.N/A');
             }) 
             ->addColumn('action', function($record) {
                 $action  = '<div class="action-grid d-flex gap-2">';
@@ -69,9 +69,16 @@ class KycCOnfigurationDataTable extends DataTable
     }
 
     public function query()
-    {
-        $apiData = $this->getRequest('kyc-configurations')["data"];  
-        return $apiData;
+    {   
+        $data = [];
+        $apiData = $this->getRequest('kyc-configurations');
+        if($apiData['status'] == false){
+            return $data;
+        }else{
+            return $apiData["data"];
+        }  
+        
+
     }
 
     public function html(): HtmlBuilder
