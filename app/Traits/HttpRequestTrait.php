@@ -1,3 +1,4 @@
+<?php
 namespace App\Traits;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -5,7 +6,7 @@ use GuzzleHttp\Exception\ClientException;
 
 trait HttpRequestTrait
 {    
-    public $apiUrl =  "https://apitest.hipl-staging3.com/api/v1/";
+    public $apiUrl =  "http://demoidfoxapi.hipl-staging3.com/api/v1/";
 
     public function getRequest($url, $params = '')
     {   
