@@ -26,47 +26,44 @@ class BrandController extends Controller
 
     public function index()
     {
-        try{
-                $loggedInUserDetails = session()->get('logged_in_user_detail');
-                $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
-               
-                $userType = $loggedInUserDetails['data']['user']['type'];
-                $aud = $accessTokenData->aud;
 
-                if(is_null($aud) && $aud == '' ){
+        $loggedInUserDetails = session()->get('logged_in_user_detail');
+        $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
+       
+        $userType = $loggedInUserDetails['data']['user']['type'];
+        $aud = $accessTokenData->aud;
 
-                    $aud_type = "null";
-                    $audience = $aud;
-                }else{
-                    if(is_array($aud)){
-                        $aud_type = "array";
-                        $audience = base64_encode(serialize($aud));
-                    }else{
-                        $aud_type = "string";
-                        $audience = base64_encode($aud);
-                    }    
-                }
+        if(is_null($aud) || $aud == '' ){
 
-                
-                switch ($userType) {
-                    case 'admin':
-                    case 'user':
-                    $brandsGetUrl = 'brands'; 
-                    break;
-                    case 'auditor':
-                    $brandsGetUrl = 'brands?aud_type='.$aud_type.'&aud='.$audience; 
-                    break;
-                    default:
-                    $brandsGetUrl = 'brands'; 
-                }
+            $aud_type = "null";
+            $audience = $aud;
+        }else{
+            if(is_array($aud)){
+                $aud_type = "array";
+                $audience = base64_encode(serialize($aud));
+            }else{
+                $aud_type = "string";
+                $audience = base64_encode($aud);
+            }    
+        }
 
-                $brand = $this->getRequest($brandsGetUrl);
-                return view("admin.brand.index",compact('brand'));
+        
+        switch ($userType) {
+            case 'admin':
+            case 'user':
+            $brandsGetUrl = 'brands'; 
+            break;
+            case 'auditor':
+            $brandsGetUrl = 'brands?aud_type='.$aud_type.'&aud='.$audience; 
+            break;
+            default:
+            $brandsGetUrl = 'brands'; 
+        }
+
+        $brand = $this->getRequest($brandsGetUrl);
+        return view("admin.brand.index",compact('brand'));
             
-            }catch(\Throwable $th){
-            //dd($th);    
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-            }
+            
     }
 
 
@@ -83,14 +80,11 @@ class BrandController extends Controller
 
     public function create()
     {   
-        try{
-            $languageUrl = "languages" ;
-            $languageData = $this->getRequest($languageUrl);
-            return view("admin.brand.create",compact('languageData'));
-
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        
+        $languageUrl = "languages" ;
+        $languageData = $this->getRequest($languageUrl);
+        return view("admin.brand.create",compact('languageData'));
+   
     }
 
 
@@ -109,67 +103,62 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {  
-        try{
-                $postData = $request->except('_token');
-                $storeUrl = 'brands'; 
-                $multipart =  [
-                    [
-                        'name' => 'domain',
-                        'contents' => $request->domain,
-                    ],
-                    [
-                        'name' => 'title',
-                        'contents' => $request->title,
-                    ],
-                    [
-                        'name' => 'audience',
-                        'contents' => $request->audience,
-                    ],
-                    [
-                        'name' => 'display_name',
-                        'contents' => $request->display_name,
-                    ],
-                    [
-                        'name' => 'display_logo',
-                        'contents' => $request->display_logo,
-                    ],
-                    [
-                        'name' => 'theme',
-                        'contents' => $request->theme,
-                    ],
-                    [
-                        'name' => 'accent_color',
-                        'contents' => $request->accent_color,
-                    ],
-                    [
-                        'name' => 'button_color',
-                        'contents' => $request->button_color,
-                    ],
-                    [
-                        'name' => 'defaul_language',
-                        'contents' => $request->defaul_language,
-                    ],
-                    [
-                        'name' => 'approval_method',
-                        'contents' => $request->approval_method,
-                    ]
-                ];
+        
+        $postData = $request->except('_token');
+        $storeUrl = 'brands'; 
+        $multipart =  [
+            [
+                'name' => 'domain',
+                'contents' => $request->domain,
+            ],
+            [
+                'name' => 'title',
+                'contents' => $request->title,
+            ],
+            [
+                'name' => 'audience',
+                'contents' => $request->audience,
+            ],
+            [
+                'name' => 'display_name',
+                'contents' => $request->display_name,
+            ],
+            [
+                'name' => 'display_logo',
+                'contents' => $request->display_logo,
+            ],
+            [
+                'name' => 'theme',
+                'contents' => $request->theme,
+            ],
+            [
+                'name' => 'accent_color',
+                'contents' => $request->accent_color,
+            ],
+            [
+                'name' => 'button_color',
+                'contents' => $request->button_color,
+            ],
+            [
+                'name' => 'defaul_language',
+                'contents' => $request->defaul_language,
+            ],
+            [
+                'name' => 'approval_method',
+                'contents' => $request->approval_method,
+            ]
+        ];
 
-                if(isset($request->logo) && $request->file('logo')){ 
-                    $multipart[] = [
-                        'name' => 'logo',
-                        'contents' => fopen($request->file('logo')->path(), 'r'),
-                        'filename' => $request->file('logo')->getClientOriginalName(),
-                    ];
-                }
-                //dd($multipart);
-                $postReponse = $this->postRequest($storeUrl,$postData,'','multipart', $multipart);
-                //dd($postReponse);
-                return response()->json($postReponse, $postReponse['code']);
-            
-            }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-            }        
+        if(isset($request->logo) && $request->file('logo')){ 
+            $multipart[] = [
+                'name' => 'logo',
+                'contents' => fopen($request->file('logo')->path(), 'r'),
+                'filename' => $request->file('logo')->getClientOriginalName(),
+            ];
+        }
+        $postReponse = $this->postRequest($storeUrl,$postData,'','multipart', $multipart);
+        return response()->json($postReponse, $postReponse['code']);
+                   
     }
 
 
@@ -190,16 +179,13 @@ class BrandController extends Controller
 
     public function edit($id)
     {
-        try{
-            $brandsEditUrl = 'brands/'.$id.'/edit';
-            $brand = $this->getRequest($brandsEditUrl);
-            //dd($brand);
-            $languageUrl = "languages" ;
-            $languageData = $this->getRequest($languageUrl);
-            return view("admin.brand.edit",compact('brand','languageData'));
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        
+        $brandsEditUrl = 'brands/'.$id.'/edit';
+        $brand = $this->getRequest($brandsEditUrl);
+        //dd($brand);
+        $languageUrl = "languages" ;
+        $languageData = $this->getRequest($languageUrl);
+        return view("admin.brand.edit",compact('brand','languageData'));
     }
 
 
@@ -220,69 +206,64 @@ class BrandController extends Controller
 
     public function update(Request $request, $id)
     {   
-        try{
-            $postData = $request->except('_method','_token');
-            $updateUrl = 'brands/update/'.$id; 
-            $multipart =  [
-              
-                [
-                    'name' => 'domain',
-                    'contents' => $request->domain,
-                ],
-                [
-                    'name' => 'title',
-                    'contents' => $request->title,
-                ],
-                [
-                    'name' => 'audience',
-                    'contents' => $request->audience,
-                ],
-                [
-                    'name' => 'display_name',
-                    'contents' => $request->display_name,
-                ],
-                [
-                    'name' => 'display_logo',
-                    'contents' => $request->display_logo,
-                ],
-                [
-                    'name' => 'theme',
-                    'contents' => $request->theme,
-                ],
-                [
-                    'name' => 'accent_color',
-                    'contents' => $request->accent_color,
-                ],
-                [
-                    'name' => 'button_color',
-                    'contents' => $request->button_color,
-                ],
-                [
-                    'name' => 'defaul_language',
-                    'contents' => $request->defaul_language,
-                ],
-                [
-                    'name' => 'approval_method',
-                    'contents' => $request->approval_method,
-                ],
-                
-            ];
-
-            if(isset($request->logo) && $request->file('logo')){ 
-                $multipart[] = [
-                    'name' => 'logo',
-                    'contents' => fopen($request->file('logo')->path(), 'r'),
-                    'filename' => $request->file('logo')->getClientOriginalName(),
-                ];
-            }
+        
+        $postData = $request->except('_method','_token');
+        $updateUrl = 'brands/update/'.$id; 
+        $multipart =  [
+          
+            [
+                'name' => 'domain',
+                'contents' => $request->domain,
+            ],
+            [
+                'name' => 'title',
+                'contents' => $request->title,
+            ],
+            [
+                'name' => 'audience',
+                'contents' => $request->audience,
+            ],
+            [
+                'name' => 'display_name',
+                'contents' => $request->display_name,
+            ],
+            [
+                'name' => 'display_logo',
+                'contents' => $request->display_logo,
+            ],
+            [
+                'name' => 'theme',
+                'contents' => $request->theme,
+            ],
+            [
+                'name' => 'accent_color',
+                'contents' => $request->accent_color,
+            ],
+            [
+                'name' => 'button_color',
+                'contents' => $request->button_color,
+            ],
+            [
+                'name' => 'defaul_language',
+                'contents' => $request->defaul_language,
+            ],
+            [
+                'name' => 'approval_method',
+                'contents' => $request->approval_method,
+            ],
             
-            //dd($multipart);
-            $postReponse = $this->postRequest($updateUrl,$postData,'','multipart', $multipart);
-            //dd($postReponse);
-            return response()->json($postReponse, $postReponse['code']);
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        ];
+
+        if(isset($request->logo) && $request->file('logo')){ 
+            $multipart[] = [
+                'name' => 'logo',
+                'contents' => fopen($request->file('logo')->path(), 'r'),
+                'filename' => $request->file('logo')->getClientOriginalName(),
+            ];
+        }
+        $postReponse = $this->postRequest($updateUrl,$postData,'','multipart', $multipart);
+        return response()->json($postReponse, $postReponse['code']);
+            
     }
 
 
@@ -301,23 +282,17 @@ class BrandController extends Controller
 
     public function destroy($id)
     {
-        try{
-            $url = 'brands/'.$id;
-            $responseData = $this->deleteRequest($url);
-            return response()->json($responseData);
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        
+        $url = 'brands/'.$id;
+        $responseData = $this->deleteRequest($url);
+        return response()->json($responseData);
     }
 
 
     public function customerList(DashboardDataTable $dataTable)
     {
-        try{
-            return $dataTable->render('admin.brand.customer');
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }
+    
+        return $dataTable->render('admin.brand.customer');
     }
 
 }

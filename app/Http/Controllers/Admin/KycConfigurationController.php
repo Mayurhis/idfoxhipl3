@@ -17,30 +17,23 @@ class KycConfigurationController extends Controller
      */
     public function index(KycConfigurationDataTable $dataTable)
     {
-        try{
-            return $dataTable->render("admin.kyc_configurations.index");
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }
+        
+        return $dataTable->render("admin.kyc_configurations.index");
         
     }
 
     public function create()
     { 
-        try{
-            $url = 'countries/active/';
-            $countries = $this->getRequest($url);
-            
-            if ($countries) { 
-                $countriesList = $countries['data'];
-                return view("admin.kyc_configurations.create", compact('countriesList'));
-            } else {
-                $errorMessage = $response->json('message');
-            }
-         }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }
+        $url = 'countries/active/';
+        $countries = $this->getRequest($url);
         
+        if ($countries) { 
+            $countriesList = $countries['data'];
+            return view("admin.kyc_configurations.create", compact('countriesList'));
+        } else {
+            $errorMessage = $response->json('message');
+        }
+    
     }
 
     /**
@@ -51,54 +44,47 @@ class KycConfigurationController extends Controller
      */
     public function store(Request $request)
     { 
-        try{
-            $postData = $request->except('_token');
-            $storeUrl = 'kyc-configurations'; 
-            $multipart =  [
-                [
-                    'name' => 'country_id',
-                    'contents' => $request->country_id,
-                ],
-                [
-                    'name' => 'status',
-                    'contents' => $request->status,
-                ],
+        $postData = $request->except('_token');
+        $storeUrl = 'kyc-configurations'; 
+        $multipart =  [
+            [
+                'name' => 'country_id',
+                'contents' => $request->country_id,
+            ],
+            [
+                'name' => 'status',
+                'contents' => $request->status,
+            ],
+        ];
+
+        if(isset($request->configuration)){ 
+
+         $multipart[] = [
+                'name' => 'configuration',
+                'contents' => implode(',',$request->configuration),
             ];
 
-            if(isset($request->configuration)){ 
+           
+        }  
 
-             $multipart[] = [
-                    'name' => 'configuration',
-                    'contents' => implode(',',$request->configuration),
-                ];
-
-               
-            }  
-
-            
-            $postReponse = $this->postRequest($storeUrl,$postData,'','multipart', $multipart); 
-            //dd($postReponse);
-            return response()->json($postReponse, $postReponse['code']);
-
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        
+        $postReponse = $this->postRequest($storeUrl,$postData,'','multipart', $multipart); 
+        //dd($postReponse);
+        return response()->json($postReponse, $postReponse['code']);
+   
     }
 
     public function edit($id)
     {
-        try{
-            $kycConfiguration = $this->getRequest('kyc-configurations/'.$id.'/edit');
-            $countries = $this->getRequest('countries/active/');
-            if ($countries && $kycConfiguration) {
-                $countriesList = $countries['data'];
-                return view("admin.kyc_configurations.edit",compact('kycConfiguration','countriesList'));
-            } else {
-                $errorMessage = $response->json('message');
-            }
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+    
+        $kycConfiguration = $this->getRequest('kyc-configurations/'.$id.'/edit');
+        $countries = $this->getRequest('countries/active/');
+        if ($countries && $kycConfiguration) {
+            $countriesList = $countries['data'];
+            return view("admin.kyc_configurations.edit",compact('kycConfiguration','countriesList'));
+        } else {
+            $errorMessage = $response->json('message');
+        }
     }
 
     
@@ -111,39 +97,36 @@ class KycConfigurationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
-            $postData = $request->except('_method','_token');
-            
-            $updateUrl = 'kyc-configurations/update/'.$id; 
+        
+        $postData = $request->except('_method','_token');
+        
+        $updateUrl = 'kyc-configurations/update/'.$id; 
 
-            $multipart =  [
-                [
-                    'name' => 'country_id',
-                    'contents' => $request->country_id,
-                ],
-                [
-                    'name' => 'status',
-                    'contents' => $request->status,
-                ],
+        $multipart =  [
+            [
+                'name' => 'country_id',
+                'contents' => $request->country_id,
+            ],
+            [
+                'name' => 'status',
+                'contents' => $request->status,
+            ],
+        ];
+
+        if(isset($request->configuration)){ 
+
+         $multipart[] = [
+                'name' => 'configuration',
+                'contents' => implode(',',$request->configuration),
             ];
 
-            if(isset($request->configuration)){ 
-
-             $multipart[] = [
-                    'name' => 'configuration',
-                    'contents' => implode(',',$request->configuration),
-                ];
-
-               
-            }
-            
-            $postReponse = $this->postRequest($updateUrl,$postData,'','multipart', $multipart);
-            //dd($postReponse);
-            return response()->json($postReponse, $postReponse['code']);
-
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+           
+        }
+        
+        $postReponse = $this->postRequest($updateUrl,$postData,'','multipart', $multipart);
+        //dd($postReponse);
+        return response()->json($postReponse, $postReponse['code']);
+    
     }
 
     /**
@@ -154,12 +137,8 @@ class KycConfigurationController extends Controller
      */
     public function destroy($id)
     {
-        try{
-            $url = 'kyc-configurations/'.$id;
-            $responseData = $this->deleteRequest($url);
-            return response()->json($responseData);
-        }catch(\Throwable $th){
-            return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
-        }    
+        $url = 'kyc-configurations/'.$id;
+        $responseData = $this->deleteRequest($url);
+        return response()->json($responseData);
     }
 }

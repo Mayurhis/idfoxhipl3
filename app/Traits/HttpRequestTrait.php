@@ -5,19 +5,19 @@ use GuzzleHttp\Exception\ClientException;
 
 trait HttpRequestTrait
 {    
-    public $apiUrl =  env("API_BASE_URL");
+    public $apiUrl =  "https://apitest.hipl-staging3.com/api/v1/";
 
     public function getRequest($url, $params = '')
     {   
+
        try {
        
-            $headers = getidFoxHeaders("get");
+            $headers = $this->getidFoxHeaders("get");
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
             if ($params != "") {
                 $url = $url . "?" . $params;
             }
-             
             $response =  $client->request('GET', $url, [
                 'headers' => $headers,
             ]); 
@@ -38,7 +38,7 @@ trait HttpRequestTrait
     public function postRequest($url,$body = null, $params = "",$formType = '', $formData = '')
     {  
        try {
-            $headers = getidFoxHeaders("post");
+            $headers = $this->getidFoxHeaders("post");
             if($formType !== 'multipart'){
                 $headers['Content-Type'] = 'application/json';
             }
@@ -66,7 +66,7 @@ trait HttpRequestTrait
     {    
         try {
 
-            $headers = getidFoxHeaders("patch");
+            $headers = $this->getidFoxHeaders("patch");
 
             if($formType !== 'multipart'){
                 $headers['Content-Type'] = 'application/json';
@@ -100,7 +100,7 @@ trait HttpRequestTrait
          try {
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
-            $headers = getidFoxHeaders("delete");
+            $headers = $this->getidFoxHeaders("delete");
             $response =  $client->request('DELETE', $url, [
                 'headers' => $headers,
             ]); 
@@ -199,5 +199,7 @@ trait HttpRequestTrait
             $secretToken = $loggedInUserDetails['data']['access_token'];
             $headers['Authorization'] = 'Bearer '.$secretToken;
         }
+
+        return $headers;
     }
 }
