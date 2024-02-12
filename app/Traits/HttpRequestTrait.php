@@ -1,5 +1,3 @@
-<?php
-
 namespace App\Traits;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
