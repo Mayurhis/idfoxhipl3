@@ -16,15 +16,16 @@ class HomeController extends Controller
     public function dashboard(DashboardDataTable $dataTable){ 
         try{
 
-            $loggedInUserDetails = session()->get('logged_in_user_detail');
+             $loggedInUserDetails = session()->get('logged_in_user_detail');
             $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
             $userType = $loggedInUserDetails['data']['user']['type'];
             $aud = $accessTokenData->aud;
-            if(is_null($aud) && $aud == '' ){
-
+            if(is_null($aud) || $aud == '' ){
+                
                 $aud_type = "null";
                 $audience = $aud;
             }else{
+                
                 if(is_array($aud)){
                     $aud_type = "array";
                     $audience = base64_encode(serialize($aud));
@@ -59,6 +60,7 @@ class HomeController extends Controller
             return $dataTable->render('admin.dashboard', compact('customerCount', 'brandCount', 'brandList')); 
 
         }catch(\Throwable $th){
+            //dd($th);
             return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
         }
               

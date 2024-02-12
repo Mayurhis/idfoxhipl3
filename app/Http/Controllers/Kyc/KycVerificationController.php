@@ -37,7 +37,7 @@ class KycVerificationController extends Controller
             $result = $this->getRequest($url);
             $countries = $result['data'];
             $data = json_decode(base64_decode($token),true);
-
+            
             $customerId     = $data['secret_key'];
             $customerUrl    = 'kyc/get-customer-detail/'.$customerId;
             $customerData   = $this->getRequest($customerUrl);
@@ -59,11 +59,9 @@ class KycVerificationController extends Controller
 
     public function checkTokenValidity($token){
         $data = json_decode(base64_decode($token),true);
-        //dd($data);
-        // $email = $data['email'];
-        // $secretKey = $data['secret_key'];
         $expireTimestamp = $data['expire_timestamp'];
         $currantTimestamp = Carbon::now()->timestamp;
+       // dd($expireTimestamp,$currantTimestamp);
         return  $currantTimestamp  <= $expireTimestamp ? true : false;
         
         // $assignedToken = Cache::get("invite_token");

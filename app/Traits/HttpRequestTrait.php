@@ -4,49 +4,26 @@ namespace App\Traits;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ClientException;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Firebase\JWT\JWT;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 trait HttpRequestTrait
 {    
-
-    public $apiUrl =  "https://apitest.hipl-staging3.com/api/v1/";
-    public $headers;
-
-    public function __construct()
-    {
-        $lang = app()->getLocale();
-
-        $this->headers = [
-            'accept' => 'application/json',
-            'content-type' => 'application/json',
-            'accepted-lang' => $lang,
-            'secret-token' => env('IAM_SECRET'),
-        ];
-    }
-
+    public $apiUrl =  env("API_BASE_URL");
 
     public function getRequest($url, $params = '')
     {   
        try {
-            $loggedInUserDetails = session()->get('logged_in_user_detail');
-            $secretToken = $loggedInUserDetails['data']['access_token'];
+       
+            $headers = getidFoxHeaders("get");
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
             if ($params != "") {
                 $url = $url . "?" . $params;
             }
-            $headers = [
-                'accept' => 'application/json',
-                'Authorization' => 'Bearer '.$secretToken,
-            ];
-            
+             
             $response =  $client->request('GET', $url, [
                 'headers' => $headers,
             ]); 
-
+           
             $body = $response->getBody()->getContents();
             return json_decode($body, true);
         }catch (ConnectException $e) {
@@ -63,15 +40,7 @@ trait HttpRequestTrait
     public function postRequest($url,$body = null, $params = "",$formType = '', $formData = '')
     {  
        try {
-
-            $loggedInUserDetails = session()->get('logged_in_user_detail');
-            $secretToken = $loggedInUserDetails['data']['access_token'];
-            $headers = [
-                'accept' => 'application/json',
-                'accepted-lang' => app()->getLocale(),
-                'Authorization' => 'Bearer '.$secretToken,
-            ];
-
+            $headers = getidFoxHeaders("post");
             if($formType !== 'multipart'){
                 $headers['Content-Type'] = 'application/json';
             }
@@ -98,13 +67,8 @@ trait HttpRequestTrait
     public function patchRequest($url,$body = null, $params = "",$formType = '', $formData = '')
     {    
         try {
-            $loggedInUserDetails = session()->get('logged_in_user_detail');
-            $secretToken = $loggedInUserDetails['data']['access_token'];
-            $headers = [
-                'accept' => 'application/json',
-                'accepted-lang' => app()->getLocale(),
-                'Authorization' => 'Bearer '.$secretToken,
-            ];
+
+            $headers = getidFoxHeaders("patch");
 
             if($formType !== 'multipart'){
                 $headers['Content-Type'] = 'application/json';
@@ -138,13 +102,7 @@ trait HttpRequestTrait
          try {
             $client    = new Client(['verify' => false]);
             $url = $this->apiUrl.$url;
-            $loggedInUserDetails = session()->get('logged_in_user_detail');
-            $secretToken = $loggedInUserDetails['data']['access_token'];
-            $headers = [
-                'accept' => 'application/json',
-                'accepted-lang' => app()->getLocale(),
-                'Authorization' => 'Bearer '.$secretToken,
-            ];
+            $headers = getidFoxHeaders("delete");
             $response =  $client->request('DELETE', $url, [
                 'headers' => $headers,
             ]); 
@@ -225,5 +183,23 @@ trait HttpRequestTrait
         }
         return $result;
 
+    }
+
+
+
+    private function  getidFoxHeaders($requestType){
+        $headers = [
+            'accept' => 'application/json'
+        ];
+
+        if($requestType != "get"){
+            $headers ['accepted-lang'] = app()->getLocale();
+        }
+
+        if(session()->has('logged_in_user_detail')){
+            $loggedInUserDetails = session()->get('logged_in_user_detail');
+            $secretToken = $loggedInUserDetails['data']['access_token'];
+            $headers['Authorization'] = 'Bearer '.$secretToken;
+        }
     }
 }

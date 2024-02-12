@@ -64,6 +64,7 @@ class BrandController extends Controller
                 return view("admin.brand.index",compact('brand'));
             
             }catch(\Throwable $th){
+            //dd($th);    
             return redirect()->route('logout',['tokenInvalid' => 'token_invalid']);
             }
     }

@@ -57,6 +57,8 @@ class LoginController extends Controller
                 
 
             }
+            //$loggedInUserDetails = session()->get('logged_in_user_detail');
+            //dd($loggedInUserDetails);
             $response = ["status" => true, "message" => "Login successfull",'url'=>$url];
             return response()->json($response,$code);
         }else{
@@ -74,6 +76,7 @@ class LoginController extends Controller
         $accessTokenData = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $loggedInUserDetails['data']['access_token'] )[1]))));
         $UserLoginService = new UserLoginService;
         $result =  $UserLoginService->IAMlogout(); 
+        //dd($result);
         if($result['response']['status'] == 'success'){
             auth()->logout();
             request()->session()->invalidate();
