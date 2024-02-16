@@ -12,6 +12,7 @@ use App\Http\Requests\Kyc\KycStoreStepFourthRequest;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class KycVerificationController extends Controller
 {  
@@ -28,6 +29,7 @@ class KycVerificationController extends Controller
 
     public function index(Request $request){
         $token = $request->token;
+        $data = json_decode(base64_decode($token),true);
         $isValid = $this->checkTokenValidity($token);
         $countries  = [];
         if($isValid){
@@ -50,6 +52,7 @@ class KycVerificationController extends Controller
             $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
             $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
             $kycConfigurationDetails = $kycConfigurationData['data'];
+            //dd($customerData);
             return view('kyc.index',compact('data','countries','brand_details','customerData','kycConfigurationDetails'));
         }
 
@@ -367,6 +370,43 @@ class KycVerificationController extends Controller
     }
 
     
+    public function loadStep($countryId){
+        
+        $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$countryId;
+        $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
+        $kycConfigurationDetails = $kycConfigurationData['data'];
+        
+        if (is_null($kycConfigurationDetails)) {
+            $html = View::make('kyc.form_steps.step2')->render();
+            $html .= View::make('kyc.form_steps.step3')->render();
+            $html .= View::make('kyc.form_steps.step4')->render();
+        } else {
 
+
+            $html = "";
+            $configurations = explode(',', $kycConfigurationDetails['configuration']);
+            foreach($configurations as $kycStep){
+                switch($kycStep) {
+                case 'photo_id_image':
+                        $html .= View::make('kyc.form_steps.step2')->render();
+                    break;
+                case 'liveliness_image':
+                    $html .= View::make('kyc.form_steps.step3')->render();
+                    break;
+                case 'address_image':
+                    $html .= View::make('kyc.form_steps.step4')->render();
+                    break;
+                    
+                default:
+                        
+                }
+                
+        }
+
+        }
+
+        return $html;
+        
+    }
 
 }

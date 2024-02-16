@@ -1,5 +1,5 @@
 {{-- Step 2 --}}
-							<div class="tab-pane fade">
+							<div class="tab-pane fade" id="formStep2">
 								<h4 class="top-title">{{__('cruds.customer-front-form.photo_of_id')}}</h4>
 								<div class="back-btn">
 									<a href="javascript:void(0)" class="outline-btn stepback-btn form-2-back"><svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
@@ -141,4 +141,4 @@
 								</div>
 								</form>
 							</div>
-								
+							

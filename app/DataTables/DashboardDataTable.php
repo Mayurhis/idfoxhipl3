@@ -98,6 +98,10 @@ class DashboardDataTable extends DataTable
             'autoWidth' => true,
             'width' => '100%',
             'searchDelay' => 1000,
+            "lengthMenu"=> [[ 10, 25, 50, 100, -1 ], [ 10, 25, 50, 100, "All" ]],
+            "pageLength"=> 10,
+            "processing"=> true,
+            "serverSide"=> true,
         ]);
     }
 

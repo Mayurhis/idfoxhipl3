@@ -29,7 +29,6 @@ class LoginController extends Controller
     {    
         $UserLoginService = new UserLoginService;
         $result =  $UserLoginService->IAMlogin($request); 
-       
         $code = 200;
         if($result['code'] == 200){
             $user = User::firstOrCreate(['email' => $request->email], ['email' =>  $request->email , 'password' => Hash::make($request->password)]);

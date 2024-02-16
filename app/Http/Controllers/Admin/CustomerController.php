@@ -367,8 +367,7 @@ class CustomerController extends Controller
 
         $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$id;
         $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
-        $kycConfigurationDetails = $kycConfigurationData['data'];
-
+        $kycConfigurationDetails = ($kycConfigurationData) ? $kycConfigurationData['data'] : [];
 
         $photoIdListing = [];
         $addressListing= [];

@@ -4,17 +4,31 @@
             $(':root').css('--primary', primaryColor);
     }
 
-  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase());
-
-	if (isMobile)
-	{
-		$(".take_photo_id_pic").show();
-		$(".take_address_pic").show();
-	}else{
-		$(".take_photo_id_pic").hide();
-		$(".take_address_pic").hide();
-	}
+  
     $(document).ready(function(){
+    		
+			
+
+			var countryId = <?php echo $customerData['address'][0]['country_id']; ?>;
+			
+			var url = "{{ route('kyc.load-step', ':countryId') }}";
+			url = url.replace(':countryId', countryId);
+			
+				if (countryId) {
+						$.ajax({
+							url: url,
+							Type: "GET",
+							contentType: false,
+							success: function(response){
+								$('.form-step-1').append(response);
+								initSwiper();
+								getDevice();
+								
+							}
+						});
+					}
+			
+
     	$(document).on("submit","#kycVerifiactionStep1",function(e){
             e.preventDefault();
             var form1Next = $('.submit-form-1');
@@ -79,12 +93,10 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}",
                     },
                     beforeSend:function(){
-                    	$('.pageloader').removeClass('d-none');
-                        $('.pageloader').addClass('d-block');
+                    	showloader();
                     },
                     success: function(response) { 
-						$('.pageloader').removeClass('d-block');
-                        $('.pageloader').addClass('d-none');
+						
 						putDataInDetail(response.data);
 					   
 					   $('.tab-bottom-blog').removeClass('edit-open');
@@ -95,20 +107,23 @@
 			                url: 'get-upload-options/'+response.data.country_id,
 			                contentType: false,
 			                success: function(ajaxResponse) {
+			                	showloader();
+
 			                	$("#photoUplaodOptions").html(ajaxResponse['htmlPhotoIdListing']);
 			                    $("#addressUplaodOptions").html(ajaxResponse['htmlAddressListing']);
 
 			                    
 			                },
-			                error: function() {}
+			                error: function() {
+			                },complete(){
+			                	hideloader();
+			                }
 			            })
 
 			            
 			            
                     },
                     error: function(response) {
-                        $('.pageloader').removeClass('d-block');
-						$('.pageloader').addClass('d-none');
                         
                         if(response.status == 422){
                         	$('body').find('.contactError').remove();
@@ -122,7 +137,7 @@
                         }
                     },
                     complete: function() {
-                        
+                        hideloader();
                     }
                 });
             }
@@ -179,7 +194,7 @@
         	getBackStep(back4Step);
         });
 
-		$("#form2Continue").click(function () {
+		$(document).on('click', '#form2Continue', function(e){	
 			var formId = 'kycVerifiactionStep2';
 			var fieldSelector = 'PhotoIdRadio';
 			var elementSelector= 'photoIdAnchor';
@@ -242,17 +257,7 @@
 
 	    
 
-
-		// $(document).on('click', '#photoIdImage', function(e){ 
-
-		// 	if($("#photoIdImage").hasAttribute("capture")){
-		// 		alert('dassdsds');
-		// 	}	
-
-  //       });
-
-
-		$("#form4Continue").click(function () {
+		$(document).on('click', '#form4Continue', function(e){
 
 			var formId = 'kycVerifiactionStep4';
 			var fieldSelector = 'addressRadio';
@@ -261,6 +266,27 @@
 			var nextModal = 'uploadaddproof';
 			formStepsValidation(formId,fieldSelector,elementSelector,rules,nextModal);
     	
+		});
+
+		$(document).on('change', '#country_id', function(e){
+			var countryId = $(this).val();
+			var url = "{{ route('kyc.load-step', ':countryId') }}";
+			url = url.replace(':countryId', countryId);
+			
+				if (countryId) {
+						$.ajax({
+							url: url,
+							Type: "GET",
+							contentType: false,
+							success: function(response){
+								$('.form-step-1 .tab-pane.fade:not(.active.show)').remove();
+								$('.form-step-1').append(response);
+								initSwiper();
+								getDevice();
+							}
+						});
+					}
+				
 		});
 
     	function getNextStep(button){
@@ -336,13 +362,10 @@
 						'X-CSRF-TOKEN': "{{ csrf_token() }}",
 					},
 					beforeSend: function () {
-						$('.pageloader').removeClass('d-none');
-						$('.pageloader').addClass('d-block');
+						showloader();
 					},
 					success: function (response) {
-						$('.pageloader').removeClass('d-block');
-						$('.pageloader').addClass('d-none');
-
+						
 						if(response.message == "form submitted"){
 							getNextStep(formNext);
 						}else{
@@ -351,12 +374,8 @@
 
 					},
 					error: function (response) {
-						$('.pageloader').removeClass('d-block');
-						$('.pageloader').addClass('d-none');
 						
 						if (response.status == 422) {
-							console.log('errorResponse :' + response );
-
 							$('body').find('.contactError').remove();
 							$.each(response.responseJSON.errors, function (key, value) {
 								var $field = $('[name="' + key + '"]');
@@ -379,13 +398,10 @@
 								}
 
 							});
-						} else {
-
-
 						}
 					},
 					complete: function () {
-						
+						hideloader();
 					}
 				});
 			}
@@ -485,6 +501,40 @@
 			return true;
 
 
+		}
+
+
+		function initSwiper() {
+			var mySwiper = new Swiper('.swiper', {
+		        slidesPerView: 4,
+		        spaceBetween: 10,
+		        navigation: {
+		            nextEl: '.swiper-button-next',
+		            prevEl: '.swiper-button-prev',
+		        },
+		        pagination: {
+		            el: '.external-pagination',
+		            clickable: true,
+		        },
+		        
+		    });
+		}
+
+		function getDevice(){
+			var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase());
+
+			if (isMobile)
+			{
+				
+				$(".take_photo_id_pic").show();
+				$(".take_address_pic").show();
+			}else{
+				
+				$(".take_photo_id_pic").hide();
+				$(".take_address_pic").hide();
+			}
+
+			return true;
 		}
 
 

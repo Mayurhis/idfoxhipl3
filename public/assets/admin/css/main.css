@@ -2125,6 +2125,26 @@ div#ui-datepicker-div {
     margin-bottom: 5px;
 }
 
+.buttons-export {
+    margin-left: 10px !important;
+    margin-bottom: 0 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    padding: 0.5em 0em;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    padding: .5rem 1rem;
+}
+
+a#customer-table_previous {
+    padding-right: 5px;
+}
+
+a#customer-table_next {
+    padding-left: 5px;
+}
 
 /* Responsive  */
 
@@ -2137,6 +2157,10 @@ div#ui-datepicker-div {
 
 
 @media(max-width:1499px){
+
+    .cardUser-details .col-xl-3.mb-3{
+        width: 33%;
+    }
     .coming-soon h3{
         font-size: 70px;
     }
@@ -2164,6 +2188,10 @@ div#ui-datepicker-div {
 
 @media(max-width:1199px){
 
+    .cardUser-details .col-xl-3.mb-3{
+        width: 50%;
+    }
+
     .default-upload-wrap{
         flex-wrap: wrap;
     }
@@ -2181,8 +2209,14 @@ div#ui-datepicker-div {
     }
 
     .data-fieldtable table td.sorting_1 {
-        min-width: 200px;
+        /* min-width: 200px; */
         white-space: normal;
+    }
+
+    .data-fieldtable table td:nth-child(2){
+        min-width: 150px;
+        white-space: break-spaces;
+        line-height: normal;
     }
 
     div#upload-options-table_wrapper td.sorting_1 {
@@ -2224,6 +2258,7 @@ div#ui-datepicker-div {
     .note-box {
         margin: -27px 0 0 0;
     }
+    
 }
 @media (max-width: 778px) and (min-width:768px){
     .note-box {
@@ -2241,9 +2276,30 @@ div#ui-datepicker-div {
     .coming-soon h3{
         font-size: 60px;
     }
+
+    .cardUser-details .col-xl-3.mb-3{
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 767px){
+
+    div.dt-buttons{
+        width: fit-content;
+        position: absolute;
+        left: 120px;
+    }
+
+    .buttons-export {
+        margin-left: 10px !important;
+        margin-bottom: 0 !important;
+        width: 100%;
+        max-width: fit-content;
+    }
+
+    .user_identity .identity_name{
+        gap: 5px;
+    }
 
     .apply-btn .applybtn-box{
         font-size: 14px;
@@ -2354,6 +2410,17 @@ div#ui-datepicker-div {
 }
 
 @media screen and (max-width: 575px){
+
+    div.dt-buttons{
+        position: initial;
+        text-align: right;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .cardUser-details .col-xl-3.mb-3{
+        width: 100%;
+    }
 
     .modal-middledata .modal-body.text-center .file-selectarea .fileForm{
         align-items: center;
@@ -2598,6 +2665,19 @@ div#ui-datepicker-div {
 }
 
 @media screen and (max-width: 355px){
+
+    div.dt-buttons{
+        text-align: center;
+    }
+
+    .buttons-export{
+        margin-top: 10px;
+    }
+
+    .user_content{
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
     .note-box {
         margin: -27px 0 0 0;
     }

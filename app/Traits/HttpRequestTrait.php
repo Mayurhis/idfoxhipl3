@@ -198,6 +198,7 @@ trait HttpRequestTrait
         if(session()->has('logged_in_user_detail')){
             $loggedInUserDetails = session()->get('logged_in_user_detail');
             $secretToken = $loggedInUserDetails['data']['access_token'];
+            //dd($secretToken);
             $headers['Authorization'] = 'Bearer '.$secretToken;
         }
 

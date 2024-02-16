@@ -1,4 +1,4 @@
-<div class="tab-pane fade">
+<div class="tab-pane fade" id="formStep3">
 								<h4 class="top-title">{{__('cruds.customer-front-form.liveness_photo')}}</h4>
 								<div class="back-btn">
 									<a href="javascript:void(0)" class="outline-btn stepback-btn form-3-back"><svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">

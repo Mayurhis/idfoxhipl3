@@ -80,13 +80,20 @@ Route::group(["namespace" => "App\Http\Controllers\Admin",'as' => 'admin.',"pref
 Route::group(["namespace" => "App\Http\Controllers\Kyc",'as' => 'kyc.',"prefix" => "kyc"],function(){
 
     Route::get("verification/{token}","KycVerificationController@index")->name("kyc-verification");
+
     Route::post("verification/store-step1","KycVerificationController@storeStep1")->name("storeStep1");
+    Route::post("verification/store-step1-info","KycVerificationController@storeStep1Info")->name("storeStep1Info");
     Route::post("verification/store-step2","KycVerificationController@storeStep2")->name("storeStep2");
     Route::post("verification/store-step3","KycVerificationController@storeStep3")->name("storeStep3");
     Route::post("verification/store-step4","KycVerificationController@storeStep4")->name("storeStep4");
     Route::get('verification/get-upload-options/{id}', "KycVerificationController@getUploadOptions")->name('get-upload-options');
     Route::get('verification/get-brand-data/{brand_name}', "KycVerificationController@getBrandData")->name('get-brand-data');
     Route::get('verification/get-customer-detail/{customer_id}', "KycVerificationController@getCustomerDetail")->name('get-customer-detail');
+
+    Route::get("verification/get-back-step/{formId}","KycVerificationController@getBackStep")->name("get-back-step");
+
+    Route::get("verification/load-step/{countryId}","KycVerificationController@loadStep")->name("load-step");
+
 
 
 });

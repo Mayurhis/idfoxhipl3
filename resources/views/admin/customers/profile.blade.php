@@ -8,6 +8,8 @@
         
     </div>
     <div class="user-detail-area">
+
+        @if($customerProfileData)
         <div class="row">
             <div class="col-12 col-sm-12 col-md-3 col-lg-2">
                 <div class="user_profile">
@@ -144,5 +146,17 @@
                
              </div>
         </div>
+        @else
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-3 col-lg-2">
+                <div>
+                    Profile data not found...
+                </div>
+            </div>
+        </div>    
+
+        @endif
+
     </div>
 @endsection

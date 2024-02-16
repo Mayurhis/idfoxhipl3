@@ -155,3 +155,10 @@ function formatStateSelection(state) {
 	return $state;
 }
 
+function showloader(){
+	$('.pageloader').removeClass('d-none');
+}
+
+function hideloader(){
+	$('.pageloader').addClass('d-none');
+}
