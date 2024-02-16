@@ -89,6 +89,7 @@ Route::group(["namespace" => "App\Http\Controllers\Kyc",'as' => 'kyc.',"prefix" 
     Route::get('verification/get-upload-options/{id}', "KycVerificationController@getUploadOptions")->name('get-upload-options');
     Route::get('verification/get-brand-data/{brand_name}', "KycVerificationController@getBrandData")->name('get-brand-data');
     Route::get('verification/get-customer-detail/{customer_id}', "KycVerificationController@getCustomerDetail")->name('get-customer-detail');
+    Route::get("verification/load-step/{countryId}","KycVerificationController@loadStep")->name("load-step");
 
     Route::get("verification/get-back-step/{formId}","KycVerificationController@getBackStep")->name("get-back-step");
 

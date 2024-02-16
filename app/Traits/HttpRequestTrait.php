@@ -6,8 +6,13 @@ use GuzzleHttp\Exception\ClientException;
 
 trait HttpRequestTrait
 {    
-    public $apiUrl =  "http://demoidfoxapi.hipl-staging3.com/api/v1/";
+    public $apiUrl;
 
+    public function getApiUrl() {
+        $this->apiUrl = env("API_BASE_URL");
+        return $this->apiUrl;
+    }
+    
     public function getRequest($url, $params = '')
     {   
 
@@ -15,7 +20,7 @@ trait HttpRequestTrait
        
             $headers = $this->getidFoxHeaders("get");
             $client    = new Client(['verify' => false]);
-            $url = $this->apiUrl.$url;
+            $url = $this->getApiUrl().$url;
             if ($params != "") {
                 $url = $url . "?" . $params;
             }
@@ -44,7 +49,7 @@ trait HttpRequestTrait
                 $headers['Content-Type'] = 'application/json';
             }
 
-            $url = $this->apiUrl.$url;
+            $url = $this->getApiUrl().$url;
             $client = new Client(); 
             $response = $client->request('POST', $url, [
                 $formType => $formData,
@@ -73,7 +78,7 @@ trait HttpRequestTrait
                 $headers['Content-Type'] = 'application/json';
             }
             
-            $url = $this->apiUrl.$url;
+            $url = $this->getApiUrl().$url;
           
             $client = new Client();
            
@@ -100,7 +105,7 @@ trait HttpRequestTrait
     {
          try {
             $client    = new Client(['verify' => false]);
-            $url = $this->apiUrl.$url;
+            $url = $this->getApiUrl().$url;
             $headers = $this->getidFoxHeaders("delete");
             $response =  $client->request('DELETE', $url, [
                 'headers' => $headers,
@@ -183,7 +188,6 @@ trait HttpRequestTrait
         return $result;
 
     }
-
 
 
     private function  getidFoxHeaders($requestType){
