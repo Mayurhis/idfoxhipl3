@@ -338,6 +338,7 @@ class KycVerificationController extends Controller
         $responseData = $this->getRequest($url);
         $photoIdListing = [];
         $addressListing= [];
+
         foreach($responseData['data'] as $response){
             switch($response['upload_type']) {
             case 'photo_id_image':

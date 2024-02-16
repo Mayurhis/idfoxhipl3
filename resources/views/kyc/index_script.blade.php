@@ -516,6 +516,25 @@
 		            el: '.external-pagination',
 		            clickable: true,
 		        },
+				breakpoints: {
+					575: {
+						slidesPerView: 1,
+						spaceBetween: 0
+					},
+					600: {
+						slidesPerView: 2,
+						spaceBetween: 10
+					},
+					1000: {
+						slidesPerView: 3,
+						spaceBetween: 10
+					},
+					1299: {
+						slidesPerView: 4,
+						spaceBetween: 10
+					}
+				},
+
 		        
 		    });
 		}
