@@ -364,7 +364,6 @@ class CustomerController extends Controller
         
         $url = 'customers/getUploadOptions/'.$id;
         $responseData = $this->getRequest($url);
-
         $kycConfigurationUrl = 'kyc/get-kyc-configuration-data/'.$id;
         $kycConfigurationData = $this->getRequest($kycConfigurationUrl);
         $kycConfigurationDetails = ($kycConfigurationData) ? $kycConfigurationData['data'] : [];

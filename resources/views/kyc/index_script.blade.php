@@ -506,7 +506,6 @@
 
 		function initSwiper() {
 			var mySwiper = new Swiper('.swiper', {
-		        slidesPerView: 4,
 		        spaceBetween: 10,
 		        navigation: {
 		            nextEl: '.swiper-button-next',

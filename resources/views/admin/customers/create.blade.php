@@ -16,10 +16,10 @@
     </div>
     <div class="mobile-header d-md-none">
         <div class="mob-logo">
-            <a href="javascript:void(0)" title="logo"><img src="images/logo.png" alt="logo" class="img-fluid"></a>
+            <a href="javascript:void(0)" title="logo"><img src="{{asset('assets/admin/images/logo.png')}}" alt="logo" class="img-fluid"></a>
         </div>
         <div class="humberger-icon">
-            <img src="images/humberger-icon.svg" alt="humberger-icon">
+            <img src="{{asset('assets/admin/images/humberger-icon.svg')}}" alt="humberger-icon">
         </div>
     </div>
     <div class="main-title add_brand_wrapper">

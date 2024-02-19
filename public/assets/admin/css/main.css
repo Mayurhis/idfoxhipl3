@@ -762,6 +762,7 @@ div#fieldtable_info,
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .add_brand_wrapper .nbtn{
@@ -2659,8 +2660,14 @@ a#customer-table_next {
         min-width: 100%;
     }
 
+    .kyc-form form label{
+        min-width: 200px;
+    }
+
     .check-list{
         gap: 40px;
+        row-gap: 10px;
+        flex-wrap: wrap;
     }
 }
 
