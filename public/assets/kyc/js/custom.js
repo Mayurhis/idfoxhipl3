@@ -162,3 +162,12 @@ function showloader(){
 function hideloader(){
 	$('.pageloader').addClass('d-none');
 }
+
+function showloader(){
+	$('.pageloader').removeClass('d-none');
+}
+
+function hideloader(){
+	$('.pageloader').addClass('d-none');
+}
+
